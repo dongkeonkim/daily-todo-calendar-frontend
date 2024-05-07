@@ -30,7 +30,6 @@ const Join = () => {
 
   return (
     <>
-      <Header />
       <div className='container'>
         <JoinForm join={join} />
       </div>

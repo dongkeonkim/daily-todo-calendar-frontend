@@ -5,67 +5,36 @@ const JoinForm = ({ join }) => {
     e.preventDefault();
 
     const form = e.target;
-    const userId = form.username.value;
-    const userPw = form.password.value;
+    const email = form.email.value;
+    const password = form.password.value;
     const name = form.name.value;
 
-    join({ userId, userPw, name });
+    join({ email, password, name });
   };
 
   return (
     <>
-      <div className='form'>
-        <h2 className='login-title'>Join</h2>
-        <form className='login-form' onSubmit={(e) => onJoin(e)}></form>
-        <label htmlFor='name'>username</label>
-        <input
-          type='text'
-          id='username'
-          placeholder=''
-          name=''
-          autocomplete=''
-          required
-        />
-      </div>
-
       <div>
-        <label htmlFor='password'>password</label>
-        <input
-          type='text'
-          id='password'
-          placeholder='password'
-          name='password'
-          autoComplete='password'
-          required
-        />
-      </div>
+        <h1 className='bg-yellow-200'>Login</h1>
 
-      <div className='form'>
-        <form className='login-form' onSubmit={(e) => onJoin}></form>
-        <label htmlFor='name'>name</label>
-        <input
-          type='text'
-          id='name'
-          placeholder=''
-          name=''
-          autocomplete=''
-          required
-        />
-      </div>
+        <form onSubmit={(e) => onJoin(e)}>
+          <input type='text' id='email' placeholder='이메일' name='' required />
 
-      <div className='form'>
-        <form className='login-form' onSubmit={(e) => onJoin}></form>
-        <label htmlFor='name'>name</label>
-        <input
-          type='text'
-          id='name'
-          placeholder=''
-          name=''
-          autocomplete=''
-          required
-        />
+          <input
+            type='password'
+            id='password'
+            placeholder='비밀번호'
+            name='password'
+            required
+          />
+
+          <input type='text' id='name' placeholder='이름' required />
+
+          <button type='submit' className='bg-blue-500 '>
+            회원가입
+          </button>
+        </form>
       </div>
-      <button className='btn btn--form btn-login'>Login</button>
     </>
   );
 };

@@ -10,7 +10,6 @@ LoginContext.displayName = 'LoginCOntextName';
 const LoginContextProvider = ({ children }) => {
   const [isLogin, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-  const [rememberUserId, setRememberUserId] = useState();
 
   const navigate = useNavigate();
 
@@ -57,6 +56,8 @@ const LoginContextProvider = ({ children }) => {
       const headers = response.headers;
       const authorization = headers.authorization;
       const accessToken = authorization.replace('Bearer ', '');
+      console.log(status);
+      console.log(accessToken);
 
       if (status == 200) {
         Cookies.set('accessToken', accessToken);
@@ -71,16 +72,12 @@ const LoginContextProvider = ({ children }) => {
   };
 
   const loginSetting = (userData, accessToken) => {
-    const { no, userId } = userData;
-
-    console.log(`no: ${no}`);
-    console.log(`userId: ${userId}`);
-
+    const { email, id, name } = userData;
     api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
     setLogin(true);
 
-    const updateUserInfo = { no, userId };
+    const updateUserInfo = { email, id, name };
 
     setUserInfo(updateUserInfo);
   };

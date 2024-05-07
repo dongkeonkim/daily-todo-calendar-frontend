@@ -8,7 +8,7 @@ const LoginForm = () => {
     e.preventDefault();
 
     const form = e.target;
-    const username = form.username.value;
+    const username = form.email.value;
     const password = form.password.value;
 
     login(username, password);
@@ -16,37 +16,33 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className='form'>
-        <h2 className='login-title'>Login</h2>
-        <form className='login-form' onSubmit={(e) => onLogin}></form>
-        <label htmlFor='name'>username</label>
-        <input
-          type='text'
-          id='username'
-          placeholder=''
-          name=''
-          autocomplete=''
-          required
-          //TODO: after id save
-          // dafeultValue()
-        />
-      </div>
-
       <div>
-        <label htmlFor='password'>password</label>
-        <input
-          type='text'
-          id='password'
-          placeholder='password'
-          name='password'
-          autoComplete='password'
-          required
-        />
-      </div>
+        <h1 className='bg-yellow-200'>Login</h1>
 
-      <button type='submit' className='btn btn--form btn-login'>
-        Login
-      </button>
+        <form onSubmit={(e) => onLogin(e)}>
+          <input
+            type='text'
+            id='email'
+            placeholder='이메일'
+            name=''
+            autoComplete=''
+            required
+          />
+
+          <input
+            type='text'
+            id='password'
+            placeholder='비밀번호'
+            name='password'
+            autoComplete='password'
+            required
+          />
+
+          <button type='submit' className='bg-blue-500 '>
+            로그인
+          </button>
+        </form>
+      </div>
     </>
   );
 };
