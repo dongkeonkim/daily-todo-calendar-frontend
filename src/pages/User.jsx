@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Header from '../Header/Header';
-import UserForm from '../User/UserForm';
+import UserForm from '../components/User/UserForm';
 
-import * as auth from '../../apis/auth';
-import { LoginContext } from '../../contexts/LoginContextProvider';
+import * as auth from '../apis/auth';
+import { LoginContext } from '../contexts/LoginContextProvider';
 import { useNavigate } from 'react-router-dom';
 
 const User = () => {
@@ -19,12 +18,18 @@ const User = () => {
 
     const response = await auth.info();
     const data = response.data;
+
+    console.log(data);
+
     setUserInfo(data);
   };
 
   const updateUser = async (form) => {
     let response;
     let data;
+
+    console.log(form);
+
     try {
       response = await auth.update(form);
     } catch (error) {
@@ -75,11 +80,15 @@ const User = () => {
     getUserInfo();
   }, [isLogin]);
 
+  // userInfo가 없는 경우 렌더링하지 않음
+  if (!userInfo) {
+    return null;
+  }
+
   return (
     <>
-      <Header />
       <div className='container'>
-        <h1>User</h1>
+        <h1 className='bg-green-200'>User</h1>
         <UserForm
           userInfo={userInfo}
           updateUser={updateUser}

@@ -7,6 +7,6 @@ export const info = () => api.get(`/member/info`);
 
 export const join = (data) => api.post('/member/create', data);
 
-export const update = (data) => api.put('/member', data);
+export const update = (data) => api.put('/member/update', data);
 
 export const remove = (userId) => api.delete(`/member/${userId}`);

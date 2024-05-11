@@ -1,10 +1,10 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './components/Header/Header';
-import { Home } from './components/pages/Home';
-import Login from './components/pages/Login';
-import Join from './components/pages/Join';
-import User from './components/pages/User';
+import { Home } from './pages/Home';
+import Login from './pages/Login';
+import Join from './pages/Join';
+import User from './pages/User';
 import LoginContextProvider from './contexts/LoginContextProvider';
 
 function App() {

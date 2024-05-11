@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginContext from '../../contexts/LoginContextConsumer';
+import LoginContext from '../contexts/LoginContextProvider';
 
 export const Home = () => {
   return (
