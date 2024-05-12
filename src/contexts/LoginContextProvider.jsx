@@ -31,6 +31,7 @@ const LoginContextProvider = ({ children }) => {
     } catch (error) {
       console.log(`error: ${error}`);
       console.log(`status: ${response.status}`);
+      logoutSetting();
       return;
     }
 
