@@ -12,8 +12,10 @@ const Join = () => {
 
     try {
       response = await auth.join(form);
+      console.log(response);
+      alert('test');
     } catch (error) {
-      console.error(`${error}`);
+      alert(error.response.data);
       return;
     }
 
