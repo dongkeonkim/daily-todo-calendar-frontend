@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-
 import * as auth from '../../apis/auth';
 import { LoginContext } from '../../contexts/LoginContextProvider';
+import { useNavigate } from 'react-router-dom';
 
 const UserPasswordUpdateForm = (props) => {
   const { userInfo } = props.data;
   const { isLogin, logout } = useContext(LoginContext);
+  const navigate = useNavigate();
 
   const updateUser = async (form) => {
     let response;
@@ -41,17 +42,24 @@ const UserPasswordUpdateForm = (props) => {
     updateUser({ currentPassword, newPassword });
   };
 
+  const onCancel = () => {
+    navigate('/user');
+  };
+
   return (
     <>
-      <div>
-        <h1 className='bg-green-200'>비밀번호 변경</h1>
+      <div className='text-center my-5'>
+        <h1 className='text-2xl font-bold p-3'>비밀번호 변경</h1>
       </div>
-      <div className='flex'>
-        <form onSubmit={(e) => onUpdate(e)}>
-          <span>{userInfo.email}</span>
+      <div className='flex justify-center'>
+        <form onSubmit={(e) => onUpdate(e)} className='w-full max-w-xs'>
+          <span className='block bg-gray-200 rounded p-3 mb-4'>
+            {userInfo.email}
+          </span>
 
-          <div>
+          <div className='mb-4'>
             <input
+              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               type='password'
               id='currentPassword'
               placeholder='현재 비밀번호'
@@ -60,8 +68,9 @@ const UserPasswordUpdateForm = (props) => {
             />
           </div>
 
-          <div>
+          <div className='mb-4'>
             <input
+              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               type='password'
               id='newPassword'
               placeholder='새 비밀번호'
@@ -70,8 +79,9 @@ const UserPasswordUpdateForm = (props) => {
             />
           </div>
 
-          <div>
+          <div className='mb-6'>
             <input
+              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               type='password'
               id='againPassword'
               placeholder='새 비밀번호 확인'
@@ -80,15 +90,20 @@ const UserPasswordUpdateForm = (props) => {
             />
           </div>
 
-          <div>
-            <div>
-              <button type='submit' className='bg-blue-500 text-white'>
-                확인
-              </button>
-            </div>
-            <div>
-              <button>취소</button>
-            </div>
+          <div className='flex flex-col items-center justify-between'>
+            <button
+              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 w-full focus:outline-none focus:shadow-outline mb-4'
+              type='submit'
+            >
+              확인
+            </button>
+            <button
+              className='font-bold py-1 px-4 w-full focus:outline-none focus:shadow-outline mb-4 border border-black'
+              type='button'
+              onClick={onCancel}
+            >
+              취소
+            </button>
           </div>
         </form>
       </div>

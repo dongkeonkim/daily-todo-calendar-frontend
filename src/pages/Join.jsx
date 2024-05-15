@@ -31,7 +31,7 @@ const Join = () => {
 
   return (
     <>
-      <div className='container'>
+      <div>
         <JoinForm join={join} />
       </div>
     </>

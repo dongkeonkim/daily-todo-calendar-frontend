@@ -91,12 +91,10 @@ const LoginContextProvider = ({ children }) => {
   };
 
   const logout = () => {
-    const check = window.confirm('로그아웃 하시겠습니까?');
+    logoutSetting();
+    navigate('/');
 
-    if (check) {
-      logoutSetting();
-      navigate('/');
-    }
+    alert('로그아웃 되었습니다.');
   };
 
   useEffect(() => {
