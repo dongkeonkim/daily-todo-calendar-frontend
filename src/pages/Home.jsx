@@ -155,8 +155,14 @@ const Home = () => {
     }
   };
 
-  const deleteNote = (index) => {
-    setNotes(notes.filter((_, i) => i !== index));
+  const deleteNote = async (id) => {
+    console.log(id);
+    try {
+      await api.delete(`http://localhost:8080/memo/delete/${id}`);
+      setNotes(notes.filter((note) => note.id !== id));
+    } catch (error) {
+      alert('메모 삭제에 실패했습니다.');
+    }
   };
 
   return (
@@ -190,7 +196,7 @@ const Home = () => {
                   className='absolute top-2 right-2 flex items-center justify-center w-6 h-6 text-white bg-gray-500 rounded-full hover:bg-red-600'
                   onClick={(e) => {
                     e.stopPropagation();
-                    deleteNote(noteIndex);
+                    deleteNote(note.id);
                   }}
                 >
                   <FaTrash />
