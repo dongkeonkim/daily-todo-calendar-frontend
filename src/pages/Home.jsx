@@ -17,6 +17,23 @@ const Home = () => {
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await api.get('http://localhost:8080/memo/all');
+
+        const data = response.data.data.map((note) => ({
+          ...note,
+        }));
+        setNotes(data);
+      } catch (error) {
+        console.error('Failed to fetch notes:', error);
+      }
+    };
+
+    fetchNotes();
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         closeModal();
@@ -101,8 +118,10 @@ const Home = () => {
         title: noteTitle,
         content: noteContent,
         todos: currentTodos,
-        scheduleDate: selectedDate,
+        scheduleDate: selectedDate.toISOString(),
       };
+
+      console.log(noteData);
 
       try {
         let response = await api.post(
@@ -164,7 +183,7 @@ const Home = () => {
                 <h2 className='text-xl font-semibold truncate'>{note.title}</h2>
                 <p className='mt-2'>
                   {note.scheduleDate
-                    ? note.scheduleDate.toLocaleDateString('ko-KR')
+                    ? new Date(note.scheduleDate).toLocaleDateString('Ko-Kr')
                     : ''}
                 </p>
                 <button
