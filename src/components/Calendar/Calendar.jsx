@@ -41,7 +41,7 @@ const Calendar = () => {
 
   return (
     <>
-      <div className='flex justify-center space-x-2 py-2'>
+      <div className='flex justify-center space-x-2 pt-4 pb-2'>
         <button className='text-base p-1 rounded-sm border'>2023</button>
         <button className='text-base p-1 rounded-sm border bg-black text-white'>
           2024
