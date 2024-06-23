@@ -7,6 +7,7 @@ import api from '../apis/api';
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
+  const [noteId, setNoteId] = useState('');
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [todoContent, setTodoContent] = useState('');
@@ -20,7 +21,7 @@ const Home = () => {
     const fetchNotes = async () => {
       try {
         const response = await api.get('http://localhost:8080/memo/all');
-
+        console.log('석세스');
         const data = response.data.data.map((note) => ({
           ...note,
         }));
@@ -61,6 +62,7 @@ const Home = () => {
     setIsEdit(true);
     setEditIndex(index);
     const note = notes[index];
+    setNoteId(note.id);
     setNoteTitle(note.title);
     setNoteContent(note.content);
     setCurrentTodos(note.todos);
@@ -69,6 +71,7 @@ const Home = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setNoteId('');
     setNoteTitle('');
     setNoteContent('');
     setTodoContent('');
@@ -109,6 +112,23 @@ const Home = () => {
     );
   };
 
+  const updateNote = async () => {
+    const noteData = {
+      id: noteId,
+      title: noteTitle,
+      content: noteContent,
+      todos: currentTodos,
+      scheduleDate: getKSTISODate(selectedDate),
+    };
+
+    try {
+      await api.put('http://localhost:8080/memo/update', noteData);
+    } catch (error) {
+      console.log(error);
+      alert('메모 수정에 실패했습니다.');
+    }
+  };
+
   const saveNote = async () => {
     if (
       noteTitle.trim() !== '' &&
@@ -118,7 +138,7 @@ const Home = () => {
         title: noteTitle,
         content: noteContent,
         todos: currentTodos,
-        scheduleDate: selectedDate.toISOString(),
+        scheduleDate: getKSTISODate(selectedDate),
       };
 
       console.log(noteData);
@@ -132,10 +152,6 @@ const Home = () => {
         const data = response.data.data;
         data.scheduleDate = new Date(data.scheduleDate);
 
-        console.log(data);
-        // TODO
-        // 새로운 저장이면 추가 후 데이터 받아와서 그대로 랜더링
-        // 수정이라면 데이터만 변경해서 랜더링
         if (isEdit && editIndex !== null) {
           const updatedNotes = notes.map((note, index) => {
             if (index === editIndex) {
@@ -155,6 +171,13 @@ const Home = () => {
     }
   };
 
+  const getKSTISODate = (date) => {
+    if (!date) return '';
+    const offset = date.getTimezoneOffset() * 60000; // 현재 타임존 오프셋 (밀리초)
+    const kstDate = new Date(date.getTime() - offset + 9 * 3600000); // 한국 표준시로 변환
+    return kstDate.toISOString().split('T')[0];
+  };
+
   const deleteNote = async (id) => {
     console.log(id);
     try {
@@ -167,7 +190,7 @@ const Home = () => {
 
   return (
     <>
-      <Calendar />
+      <Calendar notes={notes} />
       {/* 포스트잇 기능 */}
       <div className='flex flex-col items-center min-h-screen mt-5'>
         <div className='w-full rounded-lg text-lg items-center'>
@@ -279,12 +302,21 @@ const Home = () => {
                 </div>
                 <div className='mt-4'>
                   <div className='my-1 w-full'>
-                    <button
-                      onClick={saveNote}
-                      className='px-4 py-2 w-full bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200'
-                    >
-                      {isEdit ? '수정' : '추가'}
-                    </button>
+                    {!isEdit ? (
+                      <button
+                        onClick={saveNote}
+                        className='px-4 py-2 w-full bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200'
+                      >
+                        추가
+                      </button>
+                    ) : (
+                      <button
+                        onClick={updateNote}
+                        className='px-4 py-2 w-full bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200'
+                      >
+                        수정
+                      </button>
+                    )}
                   </div>
                 </div>
                 <div className='my-1 w-full'>
