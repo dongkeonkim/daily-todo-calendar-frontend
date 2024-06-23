@@ -22,29 +22,34 @@ const getISODateString = (index) => {
   return currentDate.toISOString().split('T')[0];
 };
 
-const Calendar = () => {
+const Calendar = ({ onDateChange }) => {
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Fetch contributions data from API
-    const fetchContributions = async () => {
-      try {
-        const response = await api.get('/memo/calendar', {
-          params: {
-            year: 2024,
-          },
-        });
-        console.log(response.data.data);
-        setContributions(response.data.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-      }
-    };
+  const fetchContributions = async () => {
+    try {
+      const response = await api.get('/memo/calendar', {
+        params: {
+          year: 2024,
+        },
+      });
+      setContributions(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error('Error fetching data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchContributions();
   }, []);
+
+  const handleClick = async (index) => {
+    const date = getISODateString(index);
+    await fetchContributions(date); // 클릭 시 API 호출
+    onDateChange(date); // 상위 컴포넌트로 선택된 날짜 전달
+  };
 
   const cellSize = '14px'; // Set the size of each cell
 
@@ -140,6 +145,7 @@ const Calendar = () => {
                 }}
                 data-tooltip-id={`tooltip-${index}`}
                 data-tooltip-content={`${dateString}, ${successCnt}/${totalCnt}`}
+                onClick={() => handleClick(index)}
               />
             );
           })

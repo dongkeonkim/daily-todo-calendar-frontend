@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Calendar from '../components/Calendar/Calendar';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -17,21 +17,25 @@ const Home = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
-  useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const response = await api.get('http://localhost:8080/memo/all');
-        const data = response.data.data.map((note) => ({
-          ...note,
-        }));
-        setNotes(data);
-      } catch (error) {
-        console.error('Failed to fetch notes:', error);
-      }
-    };
+  const fetchNotes = useCallback(async (year = null, date = null) => {
+    try {
+      const params = {};
+      if (year) params.year = year;
+      if (date) params.date = date;
 
-    fetchNotes();
+      const response = await api.get('http://localhost:8080/memo', { params });
+      const data = response.data.data.map((note) => ({
+        ...note,
+      }));
+      setNotes(data);
+    } catch (error) {
+      console.error('Failed to fetch notes:', error);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -187,9 +191,14 @@ const Home = () => {
     }
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    fetchNotes(null, date);
+  };
+
   return (
     <>
-      <Calendar notes={notes} />
+      <Calendar onDateChange={handleDateChange} />
       {/* 포스트잇 기능 */}
       <div className='flex flex-col items-center min-h-screen mt-5'>
         <div className='w-full rounded-lg text-lg items-center'>
