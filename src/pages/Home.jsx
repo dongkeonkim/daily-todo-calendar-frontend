@@ -21,7 +21,6 @@ const Home = () => {
     const fetchNotes = async () => {
       try {
         const response = await api.get('http://localhost:8080/memo/all');
-        console.log('석세스');
         const data = response.data.data.map((note) => ({
           ...note,
         }));
