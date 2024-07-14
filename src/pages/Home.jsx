@@ -18,11 +18,18 @@ const Home = () => {
   const [editIndex, setEditIndex] = useState(null);
 
   const fetchNotes = useCallback(async (year = null, date = null) => {
+    if (year == null) year = new Date().getFullYear();
+
+    console.log(date);
+    console.log(year);
+
     try {
       const params = {};
       if (year) params.year = year;
       if (date) params.date = date;
-
+      console.log('=');
+      console.log(params);
+      console.log('=');
       const response = await api.get('http://localhost:8080/memo', { params });
       const data = response.data.data.map((note) => ({
         ...note,
@@ -30,6 +37,7 @@ const Home = () => {
       setNotes(data);
     } catch (error) {
       console.error('Failed to fetch notes:', error);
+      setNotes([]);
     }
   }, []);
 
@@ -191,9 +199,10 @@ const Home = () => {
     }
   };
 
-  const handleDateChange = (date) => {
+  const handleDateChange = (year, date) => {
+    console.log(year, date);
     setSelectedDate(date);
-    fetchNotes(null, date);
+    fetchNotes(year, date);
   };
 
   return (

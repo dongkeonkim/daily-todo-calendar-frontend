@@ -5,7 +5,8 @@ import api from '../../apis/api';
 
 // 시작 날짜 + 일 수에 해당하는 날짜를 반환
 const getDateString = (index) => {
-  const startDate = new Date('2024-01-01'); // TODO: 날짜 변경할 때마다 연도 변경 필요
+  const currentYear = new Date().getFullYear();
+  const startDate = new Date(currentYear, 0, 1);
   const currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + index);
   return currentDate.toLocaleDateString('ko-KR', {
@@ -16,7 +17,8 @@ const getDateString = (index) => {
 
 // 시작 날짜 + 일 수에 해당하는 ISO 형식의 날짜를 반환
 const getISODateString = (index) => {
-  const startDate = new Date('2024-01-01'); // TODO: 날짜 변경할 때마다 연도 변경 필요
+  const currentYear = new Date().getFullYear();
+  const startDate = new Date(currentYear, 0, 1);
   const currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + index);
   return currentDate.toISOString().split('T')[0];
@@ -25,15 +27,47 @@ const getISODateString = (index) => {
 const Calendar = ({ onDateChange }) => {
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [years, setYears] = useState([]);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
 
-  const fetchContributions = async () => {
+  // 연도에 해당하는 잔디 데이터를 가져오는 함수. 무조건 연도만 받는다.
+  const fetchContributions = async (year = currentYear, date = null) => {
+    setCurrentYear(year);
+
+    // 잔디 데이터 api
+    if (year === '미지정') year = '';
+
     try {
       const response = await api.get('/memo/calendar', {
         params: {
-          year: 2024,
+          year: year,
+          date: date,
         },
       });
-      setContributions(response.data.data);
+
+      const grassGraph = response.data.data.calendar;
+
+      const result = grassGraph.reduce(
+        (acc, grass) => {
+          acc.successCnt += grass.successCnt;
+          acc.goalCnt += grass.totalCnt;
+          return acc;
+        },
+        { successCnt: 0, goalCnt: 0 }
+      );
+
+      // 잔디에 넣어줄 데이터 목록
+      setContributions(grassGraph);
+
+      // 작업 통계 데이터
+      setTaskStats(result);
+
+      // 연도 버튼 목록
+      setYears(response.data.data.years);
+
+      // 캘린더의 버튼을 통해 선택된 연도를 상위 컴포넌트로 전달
+      onDateChange(year, null);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -42,13 +76,18 @@ const Calendar = ({ onDateChange }) => {
   };
 
   useEffect(() => {
-    fetchContributions();
+    fetchContributions(); // 초기 로딩 시 현재 연도로 데이터 가져오기
   }, []);
 
-  const handleClick = async (index) => {
+  useEffect(() => {
+    console.log(currentYear);
+  }, [currentYear]);
+
+  // 잔디 캘린더에서 날짜 클릭시
+  const handleClick = async (year, index) => {
     const date = getISODateString(index);
-    await fetchContributions(date); // 클릭 시 API 호출
-    onDateChange(date); // 상위 컴포넌트로 선택된 날짜 전달
+    await fetchContributions(year, date);
+    onDateChange(year, date); // 상위 컴포넌트로 선택된 날짜 전달
   };
 
   const cellSize = '14px'; // Set the size of each cell
@@ -84,11 +123,17 @@ const Calendar = ({ onDateChange }) => {
   return (
     <>
       <div className='flex justify-center space-x-2 pt-4 pb-2'>
-        <button className='text-base p-1 rounded-sm border'>2023</button>
-        <button className='text-base p-1 rounded-sm border bg-black text-white'>
-          2024
-        </button>
-        <button className='text-sm p-1 rounded-sm border'>NONE</button>
+        {years.map((year) => (
+          <button
+            key={year}
+            className={`text-base p-1 rounded-sm border ${
+              year == currentYear ? 'bg-black text-white' : ''
+            }`}
+            onClick={() => fetchContributions(year, null)}
+          >
+            {year}
+          </button>
+        ))}
       </div>
 
       <div className='flex justify-center p-1'>
@@ -96,11 +141,13 @@ const Calendar = ({ onDateChange }) => {
           <div className='relative bg-black rounded-full h-4 mb-2'>
             <div
               className='absolute top-0 left-0 bg-green-500 h-4 rounded-full'
-              style={{ width: `${progressPercentage}%` }}
+              style={{
+                width: `${(taskStats.successCnt / taskStats.goalCnt) * 100}%`,
+              }}
             ></div>
             <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
               <span className='text-white font-semibold text-sm'>
-                {completedTasks}/{totalTasks}
+                {taskStats.successCnt}/{taskStats.goalCnt}
               </span>
             </div>
           </div>
@@ -145,7 +192,7 @@ const Calendar = ({ onDateChange }) => {
                 }}
                 data-tooltip-id={`tooltip-${index}`}
                 data-tooltip-content={`${dateString}, ${successCnt}/${totalCnt}`}
-                onClick={() => handleClick(index)}
+                onClick={() => handleClick(currentYear, index)}
               />
             );
           })
