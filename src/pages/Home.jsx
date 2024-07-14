@@ -20,16 +20,11 @@ const Home = () => {
   const fetchNotes = useCallback(async (year = null, date = null) => {
     if (year == null) year = new Date().getFullYear();
 
-    console.log(date);
-    console.log(year);
-
     try {
       const params = {};
       if (year) params.year = year;
       if (date) params.date = date;
-      console.log('=');
-      console.log(params);
-      console.log('=');
+
       const response = await api.get('http://localhost:8080/memo', { params });
       const data = response.data.data.map((note) => ({
         ...note,
@@ -200,7 +195,6 @@ const Home = () => {
   };
 
   const handleDateChange = (year, date) => {
-    console.log(year, date);
     setSelectedDate(date);
     fetchNotes(year, date);
   };
