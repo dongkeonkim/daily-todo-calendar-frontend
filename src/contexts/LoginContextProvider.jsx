@@ -18,6 +18,7 @@ const LoginContextProvider = ({ children }) => {
 
     if (!accessToken) {
       logoutSetting();
+      navigate('/login', { replace: true });
       return;
     }
 
@@ -64,7 +65,6 @@ const LoginContextProvider = ({ children }) => {
         Cookies.set('accessToken', accessToken);
 
         loginCheck();
-        alert('로그인 성공');
         navigate('/');
       }
     } catch (error) {
@@ -92,9 +92,10 @@ const LoginContextProvider = ({ children }) => {
 
   const logout = () => {
     logoutSetting();
-    navigate('/');
-
     alert('로그아웃 되었습니다.');
+    setTimeout(() => {
+      navigate('/login', { replace: true });
+    }, 0);
   };
 
   useEffect(() => {

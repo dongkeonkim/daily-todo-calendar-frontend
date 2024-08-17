@@ -8,6 +8,7 @@ import User from './pages/User';
 import LoginContextProvider from './contexts/LoginContextProvider';
 import UserChange from './pages/UserChange';
 import UserLeave from './pages/UserLeave';
+import PrivateRoute from './components/Auth/PrivateRoute';
 
 function App() {
   return (
@@ -19,9 +20,32 @@ function App() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/join' element={<Join />}></Route>
 
-          <Route path='/user' element={<User />}></Route>
-          <Route path='/user/changeMember' element={<UserChange />}></Route>
-          <Route path='/user/leaveMember' element={<UserLeave />}></Route>
+          <Route
+            path='/user'
+            element={
+              <PrivateRoute>
+                <User />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path='/user/changeMember'
+            element={
+              <PrivateRoute>
+                <UserChange />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path='/user/leaveMember'
+            element={
+              <PrivateRoute>
+                <UserLeave />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </LoginContextProvider>
     </BrowserRouter>
