@@ -83,83 +83,95 @@ const Calendar = ({
         {years.map((year) => (
           <button
             key={year}
-            className={`text-base p-1 rounded-sm border ${
-              year == currentYear ? 'bg-black text-white' : ''
-            }`}
+            className={`text-base p-1 rounded-sm border ${(() => {
+              if (
+                year == currentYear ||
+                (year === '미지정' && currentYear == null)
+              ) {
+                return 'bg-black text-white';
+              } else {
+                return '';
+              }
+            })()}`}
             onClick={() => onDateChange(year, null)}
           >
             {year}
           </button>
         ))}
       </div>
-
-      <div className='flex justify-center p-1'>
-        <div className='w-full max-w-lg bg-white'>
-          <div className='relative bg-black rounded-full h-4 mb-2'>
-            <div
-              className='absolute top-0 left-0 bg-green-500 h-4 rounded-full'
-              style={{
-                width: `${(taskStats.successCnt / taskStats.goalCnt) * 100}%`,
-              }}
-            ></div>
-            <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-              <span className='text-white font-semibold text-sm'>
-                {taskStats.successCnt}/{taskStats.goalCnt}
-              </span>
+      {currentYear !== null && (
+        <>
+          <div className='flex justify-center p-1'>
+            <div className='w-full max-w-lg bg-white'>
+              <div className='relative bg-black rounded-full h-4 mb-2'>
+                <div
+                  className='absolute top-0 left-0 bg-green-500 h-4 rounded-full'
+                  style={{
+                    width: `${
+                      (taskStats.successCnt / taskStats.goalCnt) * 100
+                    }%`,
+                  }}
+                ></div>
+                <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
+                  <span className='text-white font-semibold text-sm'>
+                    {taskStats.successCnt}/{taskStats.goalCnt}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${weeks}, ${cellSize})`,
-          gridAutoRows: cellSize,
-          gap: '5px',
-          width: '80%',
-          margin: '0 auto',
-          paddingBottom: '5px',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {Array.from({ length: weeks }).map((_, weekIndex) =>
-          Array.from({ length: 7 }).map((_, dayIndex) => {
-            const index = weekIndex * 7 + dayIndex;
-            if (index >= daysInYear) return null;
-            const dateString = getDateString(index);
-            const isoDateString = getISODateString(index);
-            const contribution = contributions.find(
-              (c) => c.scheduleDate === isoDateString
-            );
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${weeks}, ${cellSize})`,
+              gridAutoRows: cellSize,
+              gap: '5px',
+              width: '80%',
+              margin: '0 auto',
+              paddingBottom: '5px',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {Array.from({ length: weeks }).map((_, weekIndex) =>
+              Array.from({ length: 7 }).map((_, dayIndex) => {
+                const index = weekIndex * 7 + dayIndex;
+                if (index >= daysInYear) return null;
+                const dateString = getDateString(index);
+                const isoDateString = getISODateString(index);
+                const contribution = contributions.find(
+                  (c) => c.scheduleDate === isoDateString
+                );
 
-            const successCnt = contribution ? contribution.successCnt : 0;
-            const totalCnt = contribution ? contribution.totalCnt : 0;
+                const successCnt = contribution ? contribution.successCnt : 0;
+                const totalCnt = contribution ? contribution.totalCnt : 0;
 
-            return (
-              <div
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      ...dayStyle,
+                      backgroundColor: getColor(successCnt, totalCnt),
+                    }}
+                    data-tooltip-id={`tooltip-${index}`}
+                    data-tooltip-content={`${dateString}, ${successCnt}/${totalCnt}`}
+                    onClick={() => handleClick(currentYear, index)}
+                  />
+                );
+              })
+            )}
+            {Array.from({ length: daysInYear }).map((_, index) => (
+              <Tooltip
                 key={index}
-                style={{
-                  ...dayStyle,
-                  backgroundColor: getColor(successCnt, totalCnt),
-                }}
-                data-tooltip-id={`tooltip-${index}`}
-                data-tooltip-content={`${dateString}, ${successCnt}/${totalCnt}`}
-                onClick={() => handleClick(currentYear, index)}
+                id={`tooltip-${index}`}
+                place='top'
+                effect='solid'
               />
-            );
-          })
-        )}
-        {Array.from({ length: daysInYear }).map((_, index) => (
-          <Tooltip
-            key={index}
-            id={`tooltip-${index}`}
-            place='top'
-            effect='solid'
-          />
-        ))}
-      </div>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 };
