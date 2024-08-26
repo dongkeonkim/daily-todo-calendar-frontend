@@ -8,22 +8,20 @@ const Home = () => {
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [years, setYears] = useState([]);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear, setCurrentYear] = useState(2024);
+
+  // 숫자 타입을 문자열로 변경
   const [currentDate, setCurrentDate] = useState('');
   const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
 
   // 연도와 날짜를 가지고 메모를 가져오는 함수
   const fetchNotes = useCallback(async (year = null, date = null) => {
-    if (year === null) year = currentYear;
-    if (date === null) date = currentDate;
-    if (year === '미지정') year = '';
-
     try {
       const params = {};
       if (year) params.year = year;
       if (date) params.date = date;
 
-      const response = await api.get('http://localhost:8080/memo', { params });
+      const response = await api.get('/memo', { params });
       const data = response.data.data.map((note) => ({
         ...note,
       }));
@@ -35,40 +33,32 @@ const Home = () => {
   }, []);
 
   // 연도와 날짜를 가지고 잔디 데이터를 가져오는 함수
-  const fetchContributions = useCallback(
-    async (year = currentYear, date = currentDate) => {
-      if (year === '미지정') year = '';
+  const fetchContributions = async (year = currentYear, date = currentDate) => {
+    try {
+      const response = await api.get('/memo/calendar', {
+        params: { year: year, date: date },
+      });
 
-      try {
-        const response = await api.get('/memo/calendar', {
-          params: {
-            year: year,
-            date: date,
-          },
-        });
+      const grassGraph = response.data.data.calendar;
 
-        const grassGraph = response.data.data.calendar;
+      const result = grassGraph.reduce(
+        (acc, grass) => {
+          acc.successCnt += grass.successCnt;
+          acc.goalCnt += grass.totalCnt;
+          return acc;
+        },
+        { successCnt: 0, goalCnt: 0 }
+      );
 
-        const result = grassGraph.reduce(
-          (acc, grass) => {
-            acc.successCnt += grass.successCnt;
-            acc.goalCnt += grass.totalCnt;
-            return acc;
-          },
-          { successCnt: 0, goalCnt: 0 }
-        );
-
-        setContributions(grassGraph);
-        setTaskStats(result);
-        setYears(response.data.data.years);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        console.error('Error fetching data:', error);
-      }
-    },
-    [currentYear]
-  );
+      setContributions(grassGraph);
+      setTaskStats(result);
+      setYears(response.data.data.years);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
     fetchNotes();
@@ -132,10 +122,13 @@ const Home = () => {
 
   // 캘린터에서 데이터 변경시 실행되는 함수
   const onDateChange = (year, date) => {
-    setCurrentYear(year);
+    setCurrentYear(year !== '미지정' && year != null ? parseInt(year) : null);
     setCurrentDate(date);
-    fetchNotes(year, date);
-    fetchContributions(year, date);
+    fetchNotes(year !== '미지정' && year != null ? parseInt(year) : null, date);
+    fetchContributions(
+      year !== '미지정' && year != null ? parseInt(year) : null,
+      date
+    );
   };
 
   return (

@@ -45,7 +45,6 @@ const Calendar = ({
   const handleClick = async (year, index) => {
     console.log(year, index);
     const date = getISODateString(index);
-    // await fetchContributions(year, date);
     onDateChange(year, date);
   };
 
