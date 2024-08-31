@@ -30,7 +30,12 @@ const getISODateString = (index) => {
   const startDate = new Date(currentYear, 0, 1);
   const currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + index);
-  return currentDate.toISOString().split('T')[0];
+
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 };
 
 const Calendar = ({
@@ -43,7 +48,6 @@ const Calendar = ({
   fetchContributions,
 }) => {
   const handleClick = async (year, index) => {
-    console.log(year, index);
     const date = getISODateString(index);
     onDateChange(year, date);
   };
@@ -86,7 +90,7 @@ const Calendar = ({
             className={`text-base p-1 rounded-sm border ${(() => {
               if (
                 year == currentYear ||
-                (year === '미지정' && currentYear == null)
+                (year === '전체' && currentYear == null)
               ) {
                 return 'bg-black text-white';
               } else {
@@ -140,9 +144,9 @@ const Calendar = ({
                 if (index >= daysInYear) return null;
                 const dateString = getDateString(index);
                 const isoDateString = getISODateString(index);
-                const contribution = contributions.find(
-                  (c) => c.scheduleDate === isoDateString
-                );
+                const contribution = contributions.find((c) => {
+                  return c.scheduleDate === isoDateString;
+                });
 
                 const successCnt = contribution ? contribution.successCnt : 0;
                 const totalCnt = contribution ? contribution.totalCnt : 0;

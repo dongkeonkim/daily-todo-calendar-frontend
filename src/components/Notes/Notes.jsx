@@ -220,7 +220,9 @@ const Notes = ({
                 </ul>
                 <DatePicker
                   selected={selectedDate}
-                  onChange={(date) => setSelectedDate(date)}
+                  onChange={(date) => {
+                    setSelectedDate(date);
+                  }}
                   dateFormat='yyyy.MM.dd'
                   placeholderText='날짜 지정'
                   className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500'

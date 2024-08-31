@@ -92,7 +92,6 @@ const LoginContextProvider = ({ children }) => {
 
   const logout = () => {
     logoutSetting();
-    alert('로그아웃 되었습니다.');
     setTimeout(() => {
       navigate('/login', { replace: true });
     }, 0);

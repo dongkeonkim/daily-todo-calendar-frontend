@@ -9,22 +9,15 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [years, setYears] = useState([]);
   const [currentYear, setCurrentYear] = useState(2024);
-
-  // 숫자 타입을 문자열로 변경
-  const [currentDate, setCurrentDate] = useState('');
+  const [currentDate, setCurrentDate] = useState(null);
   const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
 
   // 연도와 날짜를 가지고 메모를 가져오는 함수
-  const fetchNotes = useCallback(async (year = null, date = null) => {
+  const fetchNotes = useCallback(async (year, date) => {
     try {
-      const params = {};
-      if (year) params.year = year;
-      if (date) params.date = date;
+      const response = await api.get('/memo', { params: { year, date } });
+      const data = response.data.data.map((note) => ({ ...note }));
 
-      const response = await api.get('/memo', { params });
-      const data = response.data.data.map((note) => ({
-        ...note,
-      }));
       setNotes(data);
     } catch (error) {
       console.error('Failed to fetch notes:', error);
@@ -61,8 +54,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchNotes();
-    fetchContributions();
+    fetchNotes(currentYear, currentDate);
+    fetchContributions(currentYear, currentDate);
   }, []);
 
   const saveNote = async (title, content, todos, scheduleDate) => {
@@ -97,8 +90,8 @@ const Home = () => {
     };
 
     try {
-      await api.put('http://localhost:8080/memo/update', noteData);
-      fetchNotes(); // 업데이트 후 노트를 다시 가져오기
+      await api.put('/memo/update', noteData);
+      fetchNotes();
     } catch (error) {
       console.log(error);
       alert('메모 수정에 실패했습니다.');
@@ -107,7 +100,7 @@ const Home = () => {
 
   const deleteNote = async (id) => {
     try {
-      await api.delete(`http://localhost:8080/memo/delete/${id}`);
+      await api.delete(`/memo/delete/${id}`);
       setNotes(notes.filter((note) => note.id !== id));
       fetchNotes(); // 삭제 후 노트를 다시 가져오기
     } catch (error) {
@@ -117,16 +110,21 @@ const Home = () => {
 
   const getKSTISODate = (date) => {
     if (!date) return '';
-    return new Date(date).toISOString().split('T')[0];
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   };
 
   // 캘린터에서 데이터 변경시 실행되는 함수
   const onDateChange = (year, date) => {
-    setCurrentYear(year !== '미지정' && year != null ? parseInt(year) : null);
+    setCurrentYear(year !== '전체' && year != null ? parseInt(year) : null);
     setCurrentDate(date);
-    fetchNotes(year !== '미지정' && year != null ? parseInt(year) : null, date);
+    fetchNotes(year !== '전체' && year != null ? parseInt(year) : null, date);
     fetchContributions(
-      year !== '미지정' && year != null ? parseInt(year) : null,
+      year !== '전체' && year != null ? parseInt(year) : null,
       date
     );
   };
