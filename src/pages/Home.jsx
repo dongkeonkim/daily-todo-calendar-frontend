@@ -93,7 +93,6 @@ const Home = () => {
       await api.put('/memo/update', noteData);
       fetchNotes();
     } catch (error) {
-      console.log(error);
       alert('메모 수정에 실패했습니다.');
     }
   };

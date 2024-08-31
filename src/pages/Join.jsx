@@ -12,6 +12,7 @@ const Join = () => {
 
     try {
       response = await auth.join(form);
+      alert('회원가입이 성공하였습니다');
     } catch (error) {
       alert(error.response.data);
       return;

@@ -144,7 +144,6 @@ const Calendar = ({
                 const isoDateString = getISODateString(currentYear, index);
 
                 const contribution = contributions.find((c) => {
-                  console.log(c.scheduleDate, isoDateString);
                   return c.scheduleDate === isoDateString;
                 });
 

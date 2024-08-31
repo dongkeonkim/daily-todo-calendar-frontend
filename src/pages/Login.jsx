@@ -8,7 +8,6 @@ function LoginRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(isLogin);
     if (isLogin) {
       navigate('/'); // 로그인한 상태라면 홈으로 리다이렉트
     }

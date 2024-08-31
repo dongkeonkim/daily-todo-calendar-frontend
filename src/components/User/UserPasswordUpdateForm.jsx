@@ -12,8 +12,6 @@ const UserPasswordUpdateForm = (props) => {
     let response;
     let data;
 
-    console.log(form);
-
     try {
       response = await auth.update(form);
       logout();
@@ -34,8 +32,6 @@ const UserPasswordUpdateForm = (props) => {
       alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
       return;
     }
-
-    //TODO: 제한 길이, 비밀번호 형식 추가
 
     updateUser({ currentPassword, newPassword });
   };
