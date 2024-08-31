@@ -30,14 +30,11 @@ const LoginContextProvider = ({ children }) => {
     try {
       response = await auth.info();
     } catch (error) {
-      console.log(`error: ${error}`);
-      console.log(`status: ${response.status}`);
       logoutSetting();
       return;
     }
 
     data = response.data;
-    console.log(data);
 
     if (data == 'UNAUTHRIZED' || response.status === 401) {
       console.error('인증에 실패하였습니다.');
@@ -48,9 +45,6 @@ const LoginContextProvider = ({ children }) => {
   };
 
   const login = async (username, password) => {
-    console.log(username);
-    console.log(password);
-
     try {
       const response = await auth.login(username, password);
       const data = response.data;
@@ -58,8 +52,6 @@ const LoginContextProvider = ({ children }) => {
       const headers = response.headers;
       const authorization = headers.authorization;
       const accessToken = authorization.replace('Bearer ', '');
-      console.log(status);
-      console.log(accessToken);
 
       if (status == 200) {
         Cookies.set('accessToken', accessToken);

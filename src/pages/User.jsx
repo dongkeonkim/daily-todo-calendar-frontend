@@ -21,8 +21,6 @@ const User = () => {
     const response = await auth.info();
     const data = response.data;
 
-    console.log(data);
-
     setUserInfo(data);
   };
 
@@ -37,8 +35,6 @@ const User = () => {
   if (!userInfo) {
     return null;
   }
-
-  console.log(userInfo);
 
   return (
     <>

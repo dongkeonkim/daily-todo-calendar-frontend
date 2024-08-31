@@ -14,8 +14,7 @@ function getDaysOfYear(year) {
   return count;
 }
 
-const getDateString = (index) => {
-  const currentYear = new Date().getFullYear();
+const getDateString = (currentYear, index) => {
   const startDate = new Date(currentYear, 0, 1);
   const currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + index);
@@ -25,8 +24,7 @@ const getDateString = (index) => {
   });
 };
 
-const getISODateString = (index) => {
-  const currentYear = new Date().getFullYear();
+const getISODateString = (currentYear, index) => {
   const startDate = new Date(currentYear, 0, 1);
   const currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + index);
@@ -48,7 +46,7 @@ const Calendar = ({
   fetchContributions,
 }) => {
   const handleClick = async (year, index) => {
-    const date = getISODateString(index);
+    const date = getISODateString(currentYear, index);
     onDateChange(year, date);
   };
 
@@ -142,9 +140,11 @@ const Calendar = ({
               Array.from({ length: 7 }).map((_, dayIndex) => {
                 const index = weekIndex * 7 + dayIndex;
                 if (index >= daysInYear) return null;
-                const dateString = getDateString(index);
-                const isoDateString = getISODateString(index);
+                const dateString = getDateString(currentYear, index);
+                const isoDateString = getISODateString(currentYear, index);
+
                 const contribution = contributions.find((c) => {
+                  console.log(c.scheduleDate, isoDateString);
                   return c.scheduleDate === isoDateString;
                 });
 
