@@ -5,18 +5,24 @@ import logoImage from '../../image/logo.webp';
 
 const Header = () => {
   const { isLogin, logout } = useContext(LoginContext);
+
+  const handleClick = (e) => {
+    if (!isLogin) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <header className='flex items-center justify-between p-4 shadow'>
       <div>
-        <Link className='font-medium flex items-center space-x-3' to='/'>
-          <img
-            src={logoImage}
-            alt=''
-            className='h-10 w-10 bg-black rounded-lg'
-          />
-
+        <a
+          href='/'
+          className='font-medium flex items-center space-x-2'
+          onClick={handleClick}
+        >
+          <img src={logoImage} alt='' className='h-6 w-6 bg-black rounded' />
           <h1 className='text-black font-medium'>Todo Calendar</h1>
-        </Link>
+        </a>
       </div>
       <div>
         {!isLogin ? (
