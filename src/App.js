@@ -14,39 +14,43 @@ function App() {
   return (
     <BrowserRouter>
       <LoginContextProvider>
-        <Header />
-        <Routes>
-          <Route path='/' element={<Home />}></Route>
-          <Route path='/login' element={<Login />}></Route>
-          <Route path='/join' element={<Join />}></Route>
+        <div className='flex flex-col min-h-screen'>
+          <Header />
+          <div className='flex-grow'>
+            <Routes>
+              <Route path='/' element={<Home />}></Route>
+              <Route path='/login' element={<Login />}></Route>
+              <Route path='/join' element={<Join />}></Route>
 
-          <Route
-            path='/user'
-            element={
-              <PrivateRoute>
-                <User />
-              </PrivateRoute>
-            }
-          />
+              <Route
+                path='/user'
+                element={
+                  <PrivateRoute>
+                    <User />
+                  </PrivateRoute>
+                }
+              />
 
-          <Route
-            path='/user/changeMember'
-            element={
-              <PrivateRoute>
-                <UserChange />
-              </PrivateRoute>
-            }
-          />
+              <Route
+                path='/user/changeMember'
+                element={
+                  <PrivateRoute>
+                    <UserChange />
+                  </PrivateRoute>
+                }
+              />
 
-          <Route
-            path='/user/leaveMember'
-            element={
-              <PrivateRoute>
-                <UserLeave />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
+              <Route
+                path='/user/leaveMember'
+                element={
+                  <PrivateRoute>
+                    <UserLeave />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </div>
       </LoginContextProvider>
     </BrowserRouter>
   );

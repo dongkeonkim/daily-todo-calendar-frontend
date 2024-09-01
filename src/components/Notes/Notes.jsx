@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
+import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Notes = ({
@@ -226,6 +227,8 @@ const Notes = ({
                   dateFormat='yyyy.MM.dd'
                   placeholderText='날짜 지정'
                   className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500'
+                  onKeyDown={(e) => e.preventDefault()}
+                  locale={ko}
                 />
               </div>
               <div className='mt-4'>

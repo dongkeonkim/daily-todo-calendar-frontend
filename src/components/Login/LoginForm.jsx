@@ -16,8 +16,10 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
-        <h1 className='mb-5 text-3xl font-bold text-yellow-500'>Login</h1>
+      <div className='flex flex-col items-center justify-center min-h-[calc(100vh-64px)] bg-gray-100'>
+        <h1 className='mb-5 text-4xl font-bold text-blue-900 bg-gray-100'>
+          Login
+        </h1>
 
         <form onSubmit={(e) => onLogin(e)} className='w-64'>
           <input

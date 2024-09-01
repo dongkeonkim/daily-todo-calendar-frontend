@@ -9,7 +9,7 @@ function LoginRedirect() {
 
   useEffect(() => {
     if (isLogin) {
-      navigate('/'); // 로그인한 상태라면 홈으로 리다이렉트
+      navigate('/');
     }
   }, [isLogin]);
 }
@@ -18,9 +18,9 @@ const Login = () => {
   LoginRedirect();
   return (
     <>
-      <div>
-        <LoginForm />
-      </div>
+      {/* <div> */}
+      <LoginForm />
+      {/* </div> */}
     </>
   );
 };

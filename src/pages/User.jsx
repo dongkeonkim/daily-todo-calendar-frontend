@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import UserPasswordUpdateForm from '../components/User/UserPasswordUpdateForm';
 
-import characterImage from '../image/character.jpeg';
+import characterImage from '../image/profile.webp';
 
 import * as auth from '../apis/auth';
 import { LoginContext } from '../contexts/LoginContextProvider';
@@ -37,37 +37,43 @@ const User = () => {
   }
 
   return (
-    <>
-      <div className='flex flex-col items-center mt-20 '>
-        <div className='w-64'>
-          <img
-            className='w-64 h-64 rounded-full mx-auto shadow-lg'
-            src={characterImage}
-            alt='Profile'
-          />
-          <div className='text-center mt-4'>
-            <h2 className='text-2xl font-semibold'>{userInfo.name}</h2>
-            <p className='text-gray-600 text-lg'>{userInfo.email}</p>
-          </div>
-        </div>
-        <div className='mt-8'>
-          <Link
-            to={'/user/changeMember'}
-            state={{ data: userInfo }}
-            className='inline-block bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 mr-2'
-          >
-            비밀번호 변경
-          </Link>
-          <Link
-            to={'/user/leaveMember'}
-            state={{ data: userInfo }}
-            className='inline-block bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600'
-          >
-            회원 탈퇴
-          </Link>
+    <div className='flex flex-col items-center mt-20'>
+      <div className='w-64'>
+        <img
+          className='w-64 h-64 rounded-full mx-auto shadow-lg'
+          src={characterImage}
+          alt='Profile'
+        />
+        <div className='text-center mt-4'>
+          <h2 className='text-2xl font-semibold'>{userInfo.name}</h2>
+          <p className='text-gray-600 text-lg'>{userInfo.email}</p>
         </div>
       </div>
-    </>
+      <div className='mt-3 w-1/3 flex justify-center'>
+        <Link
+          to={'/user/changeMember'}
+          state={{ data: userInfo }}
+          className='inline-block bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 mr-2'
+        >
+          비밀번호 변경
+        </Link>
+        <Link
+          to={'/user/leaveMember'}
+          state={{ data: userInfo }}
+          className='inline-block bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600'
+        >
+          회원 탈퇴
+        </Link>
+      </div>
+      <div className='mt-2 w-1/3 flex justify-center'>
+        <Link
+          to={'/'}
+          className='inline-block bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600'
+        >
+          돌아가기
+        </Link>
+      </div>
+    </div>
   );
 };
 

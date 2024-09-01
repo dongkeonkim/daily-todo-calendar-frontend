@@ -21,7 +21,6 @@ const Join = () => {
     data = response.data;
     const status = response.status;
     if (status === 200) {
-      alert('성공');
       navigate('/login');
     } else {
       alert('실패');
