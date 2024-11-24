@@ -2,11 +2,13 @@ import React, { useContext } from 'react';
 import * as auth from '../../apis/auth';
 import { LoginContext } from '../../contexts/LoginContextProvider';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../../contexts/AlertContext';
 
 const UserPasswordUpdateForm = (props) => {
   const { userInfo } = props.data;
   const { isLogin, logout } = useContext(LoginContext);
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
 
   const updateUser = async (form) => {
     let response;
@@ -16,7 +18,7 @@ const UserPasswordUpdateForm = (props) => {
       response = await auth.update(form);
       logout();
     } catch (error) {
-      alert(error.response.data);
+      showAlert(error.response.data);
     }
   };
 
@@ -29,7 +31,7 @@ const UserPasswordUpdateForm = (props) => {
     const againPassword = form.againPassword.value;
 
     if (againPassword !== newPassword) {
-      alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+      showAlert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
       return;
     }
 

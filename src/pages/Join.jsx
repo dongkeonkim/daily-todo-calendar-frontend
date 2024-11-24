@@ -2,9 +2,11 @@ import React from 'react';
 import JoinForm from '../components/Join/JoinForm';
 import * as auth from '../apis/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../contexts/AlertContext';
 
 const Join = () => {
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
 
   const join = async (form) => {
     let response;
@@ -12,9 +14,9 @@ const Join = () => {
 
     try {
       response = await auth.join(form);
-      alert('회원가입이 성공하였습니다');
+      showAlert('회원가입이 성공하였습니다');
     } catch (error) {
-      alert(error.response.data);
+      showAlert(error.response.data);
       return;
     }
 
@@ -23,7 +25,7 @@ const Join = () => {
     if (status === 200) {
       navigate('/login');
     } else {
-      alert('실패');
+      showAlert('실패');
     }
   };
 

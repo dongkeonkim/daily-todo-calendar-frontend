@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Calendar from '../components/Calendar/Calendar';
 import Notes from '../components/Notes/Notes';
 import api from '../apis/api';
+import { useAlert } from '../contexts/AlertContext';
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
@@ -11,6 +12,7 @@ const Home = () => {
   const [currentYear, setCurrentYear] = useState(2024);
   const [currentDate, setCurrentDate] = useState(null);
   const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
+  const { showAlert } = useAlert();
 
   // 연도와 날짜를 가지고 메모를 가져오는 함수
   const fetchNotes = useCallback(async (year, date) => {
@@ -76,7 +78,7 @@ const Home = () => {
       setNotes([...notes, data]);
       fetchNotes();
     } catch (error) {
-      alert('메모 저장에 실패했습니다.');
+      showAlert('메모 저장에 실패했습니다.');
     }
   };
 
@@ -93,7 +95,7 @@ const Home = () => {
       await api.put('/memo/update', noteData);
       fetchNotes();
     } catch (error) {
-      alert('메모 수정에 실패했습니다.');
+      showAlert('메모 수정에 실패했습니다.');
     }
   };
 
@@ -103,7 +105,7 @@ const Home = () => {
       setNotes(notes.filter((note) => note.id !== id));
       fetchNotes(); // 삭제 후 노트를 다시 가져오기
     } catch (error) {
-      alert('메모 삭제에 실패했습니다.');
+      showAlert('메모 삭제에 실패했습니다.');
     }
   };
 

@@ -2,11 +2,13 @@ import React, { useContext } from 'react';
 import * as auth from '../../apis/auth';
 import { LoginContext } from '../../contexts/LoginContextProvider';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../../contexts/AlertContext';
 
 function UserLeaveForm(props) {
   const { userInfo } = props.data;
   const { isLogin, logout } = useContext(LoginContext);
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
 
   const deleteUser = async (userInfo) => {
     let response;
@@ -15,7 +17,7 @@ function UserLeaveForm(props) {
       response = await auth.remove(userInfo);
       logout();
     } catch (error) {
-      alert(error.response.data);
+      showAlert(error.response.data);
     }
   };
 

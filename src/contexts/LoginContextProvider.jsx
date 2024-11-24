@@ -3,6 +3,7 @@ import api from '../apis/api';
 import Cookies from 'js-cookie';
 import * as auth from '../apis/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from './AlertContext';
 
 export const LoginContext = createContext();
 LoginContext.displayName = 'LoginCOntextName';
@@ -10,6 +11,7 @@ LoginContext.displayName = 'LoginCOntextName';
 const LoginContextProvider = ({ children }) => {
   const [isLogin, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const { showAlert } = useAlert();
 
   const navigate = useNavigate();
 
@@ -60,7 +62,7 @@ const LoginContextProvider = ({ children }) => {
         navigate('/');
       }
     } catch (error) {
-      alert('로그인 실패');
+      showAlert('로그인 실패');
     }
   };
 
