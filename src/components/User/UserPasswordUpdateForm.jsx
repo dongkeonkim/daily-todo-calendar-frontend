@@ -16,6 +16,7 @@ const UserPasswordUpdateForm = (props) => {
 
     try {
       response = await auth.update(form);
+      showAlert('비밀번호가 변경되었습니다.');
       logout();
     } catch (error) {
       showAlert(error.response.data);
