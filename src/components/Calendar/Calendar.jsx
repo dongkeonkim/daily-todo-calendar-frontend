@@ -41,7 +41,6 @@ const Calendar = ({
   years,
   currentYear,
   taskStats,
-  loading,
   onDateChange,
   fetchContributions,
 }) => {
@@ -74,10 +73,6 @@ const Calendar = ({
 
     return colors[colorIndex];
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>

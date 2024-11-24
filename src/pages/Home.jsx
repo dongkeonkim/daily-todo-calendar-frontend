@@ -3,35 +3,36 @@ import Calendar from '../components/Calendar/Calendar';
 import Notes from '../components/Notes/Notes';
 import api from '../apis/api';
 import { useAlert } from '../contexts/AlertContext';
+import { useLoading } from '../contexts/LoadingContext';
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
   const [contributions, setContributions] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [years, setYears] = useState([]);
   const [currentYear, setCurrentYear] = useState(2024);
   const [currentDate, setCurrentDate] = useState(null);
   const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
   const { showAlert } = useAlert();
+  const { startLoading, finishLoading } = useLoading();
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 연도와 날짜를 가지고 메모를 가져오는 함수
   const fetchNotes = useCallback(async (year, date) => {
     try {
       const response = await api.get('/memo', { params: { year, date } });
       const data = response.data.data.map((note) => ({ ...note }));
-
       setNotes(data);
     } catch (error) {
       console.error('Failed to fetch notes:', error);
       setNotes([]);
     }
-  }, []);
+  }, []); // 의존성 배열 비워서 재생성 방지
 
   // 연도와 날짜를 가지고 잔디 데이터를 가져오는 함수
-  const fetchContributions = async (year = currentYear, date = currentDate) => {
+  const fetchContributions = useCallback(async (year, date) => {
     try {
       const response = await api.get('/memo/calendar', {
-        params: { year: year, date: date },
+        params: { year, date },
       });
 
       const grassGraph = response.data.data.calendar;
@@ -48,17 +49,29 @@ const Home = () => {
       setContributions(grassGraph);
       setTaskStats(result);
       setYears(response.data.data.years);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.error('Error fetching data:', error);
     }
-  };
+  }, []); // 의존성 배열 비워서 재생성 방지
 
+  // 초기 데이터 로드
   useEffect(() => {
-    fetchNotes(currentYear, currentDate);
-    fetchContributions(currentYear, currentDate);
-  }, []);
+    const loadData = async () => {
+      startLoading();
+      try {
+        await delay(3000); // 3초 대기
+
+        await fetchNotes(currentYear, currentDate);
+        await fetchContributions(currentYear, currentDate);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        finishLoading();
+      }
+    };
+
+    loadData();
+  }, [currentYear, currentDate, fetchNotes, fetchContributions]); // 의존성 정리
 
   const saveNote = async (title, content, todos, scheduleDate) => {
     const noteData = {
@@ -69,16 +82,16 @@ const Home = () => {
     };
 
     try {
-      let response = await api.post(
-        'http://localhost:8080/memo/create',
-        noteData
-      );
+      startLoading();
+      const response = await api.post('/memo/create', noteData);
       const data = response.data.data;
       data.scheduleDate = new Date(data.scheduleDate);
-      setNotes([...notes, data]);
-      fetchNotes();
+      setNotes((prevNotes) => [...prevNotes, data]);
+      await fetchNotes(currentYear, currentDate);
     } catch (error) {
       showAlert('메모 저장에 실패했습니다.');
+    } finally {
+      finishLoading();
     }
   };
 
@@ -92,20 +105,26 @@ const Home = () => {
     };
 
     try {
+      startLoading();
       await api.put('/memo/update', noteData);
-      fetchNotes();
+      await fetchNotes(currentYear, currentDate);
     } catch (error) {
       showAlert('메모 수정에 실패했습니다.');
+    } finally {
+      finishLoading();
     }
   };
 
   const deleteNote = async (id) => {
     try {
+      startLoading();
       await api.delete(`/memo/delete/${id}`);
-      setNotes(notes.filter((note) => note.id !== id));
-      fetchNotes(); // 삭제 후 노트를 다시 가져오기
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+      await fetchNotes(currentYear, currentDate);
     } catch (error) {
       showAlert('메모 삭제에 실패했습니다.');
+    } finally {
+      finishLoading();
     }
   };
 
@@ -119,15 +138,20 @@ const Home = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // 캘린터에서 데이터 변경시 실행되는 함수
-  const onDateChange = (year, date) => {
-    setCurrentYear(year !== '전체' && year != null ? parseInt(year) : null);
+  // 캘린더에서 데이터 변경 시 실행되는 함수
+  const onDateChange = async (year, date) => {
+    const parsedYear = year !== '전체' && year != null ? parseInt(year) : null;
+    setCurrentYear(parsedYear);
     setCurrentDate(date);
-    fetchNotes(year !== '전체' && year != null ? parseInt(year) : null, date);
-    fetchContributions(
-      year !== '전체' && year != null ? parseInt(year) : null,
-      date
-    );
+    startLoading();
+    try {
+      await fetchNotes(parsedYear, date);
+      await fetchContributions(parsedYear, date);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      finishLoading();
+    }
   };
 
   return (
@@ -137,7 +161,6 @@ const Home = () => {
         years={years}
         currentYear={currentYear}
         taskStats={taskStats}
-        loading={loading}
         onDateChange={onDateChange}
         fetchContributions={fetchContributions}
       />
