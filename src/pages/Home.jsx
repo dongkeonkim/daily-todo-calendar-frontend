@@ -14,7 +14,6 @@ const Home = () => {
   const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
   const { showAlert } = useAlert();
   const { startLoading, finishLoading } = useLoading();
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 연도와 날짜를 가지고 메모를 가져오는 함수
   const fetchNotes = useCallback(async (year, date) => {
@@ -26,7 +25,7 @@ const Home = () => {
       console.error('Failed to fetch notes:', error);
       setNotes([]);
     }
-  }, []); // 의존성 배열 비워서 재생성 방지
+  }, []);
 
   // 연도와 날짜를 가지고 잔디 데이터를 가져오는 함수
   const fetchContributions = useCallback(async (year, date) => {
@@ -52,15 +51,13 @@ const Home = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }, []); // 의존성 배열 비워서 재생성 방지
+  }, []);
 
   // 초기 데이터 로드
   useEffect(() => {
     const loadData = async () => {
       startLoading();
       try {
-        await delay(3000); // 3초 대기
-
         await fetchNotes(currentYear, currentDate);
         await fetchContributions(currentYear, currentDate);
       } catch (error) {
