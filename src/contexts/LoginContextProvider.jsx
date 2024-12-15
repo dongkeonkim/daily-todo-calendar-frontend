@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
-import api from '../apis/api';
+import api from '@/apis/api';
 import Cookies from 'js-cookie';
-import * as auth from '../apis/auth';
+import * as auth from '@/apis/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from './AlertContext';
 

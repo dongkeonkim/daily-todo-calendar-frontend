@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Calendar from '../components/Calendar/Calendar';
-import Notes from '../components/Notes/Notes';
-import api from '../apis/api';
-import { useAlert } from '../contexts/AlertContext';
-import { useLoading } from '../contexts/LoadingContext';
+import Calendar from '@/components/Calendar/Calendar';
+import Notes from '@/components/Notes/Notes';
+import api from '@/apis/api';
+import { useAlert } from '@/contexts/AlertContext';
+import { useLoading } from '@/contexts/LoadingContext';
 
 const Home = () => {
   const [notes, setNotes] = useState([]);

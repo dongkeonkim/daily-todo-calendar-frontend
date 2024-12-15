@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import UserPasswordUpdateForm from '../components/User/UserPasswordUpdateForm';
+import UserPasswordUpdateForm from '@/components/User/UserPasswordUpdateForm';
 
-import characterImage from '../image/profile.webp';
+import characterImage from '@/image/profile.webp';
 
-import * as auth from '../apis/auth';
-import { LoginContext } from '../contexts/LoginContextProvider';
+import * as auth from '@/apis/auth';
+import { LoginContext } from '@/contexts/LoginContextProvider';
 import { Link, Route, useNavigate } from 'react-router-dom';
 
 const User = () => {

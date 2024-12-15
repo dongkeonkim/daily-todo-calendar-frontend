@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import * as auth from '../../apis/auth';
-import { LoginContext } from '../../contexts/LoginContextProvider';
+import * as auth from '@/apis/auth';
+import { LoginContext } from '@/contexts/LoginContextProvider';
 import { useNavigate } from 'react-router-dom';
-import { useAlert } from '../../contexts/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 function UserLeaveForm(props) {
   const { userInfo } = props.data;

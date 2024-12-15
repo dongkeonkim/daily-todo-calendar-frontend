@@ -1,8 +1,8 @@
 import React from 'react';
-import JoinForm from '../components/Join/JoinForm';
-import * as auth from '../apis/auth';
+import JoinForm from '@/components/Join/JoinForm';
+import * as auth from '@/apis/auth';
 import { useNavigate } from 'react-router-dom';
-import { useAlert } from '../contexts/AlertContext';
+import { useAlert } from '@/contexts/AlertContext';
 
 const Join = () => {
   const navigate = useNavigate();

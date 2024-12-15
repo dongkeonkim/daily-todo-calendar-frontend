@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { LoginContext } from '../../contexts/LoginContextProvider';
+import { LoginContext } from '@/contexts/LoginContextProvider';
 
 const LoginForm = () => {
   const { login } = useContext(LoginContext);
