@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Home from './pages/Home';
@@ -10,9 +10,9 @@ import LoginContextProvider from './contexts/LoginContextProvider';
 import UserChange from './pages/UserChange';
 import UserLeave from './pages/UserLeave';
 import PrivateRoute from './components/Auth/PrivateRoute';
-import { AlertProvider } from './contexts/AlertContext'; // AlertProvider 추가
+import { AlertProvider } from './contexts/AlertContext';
 import { LoadingProvider } from './contexts/LoadingContext';
-import LoadingSpinner from './components/Loadings/LoadingSpinner'; // 로딩 화면 컴포넌트
+import LoadingSpinner from './components/Loadings/LoadingSpinner';
 
 function App() {
   return (

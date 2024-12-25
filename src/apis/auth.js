@@ -1,11 +1,10 @@
 import api from './api';
 
-export const login = (username, password) =>
-  api.post(`/login?username=${username}&password=${password}`);
-// api.post('/login', {
-//   username: username,
-//   password: password,
-// });
+export const login = (email, password) =>
+  api.post('/auth/login', {
+    email: email,
+    password: password,
+  });
 
 export const info = () => api.get(`/member/info`);
 

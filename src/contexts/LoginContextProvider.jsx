@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAlert } from './AlertContext';
 
 export const LoginContext = createContext();
-LoginContext.displayName = 'LoginCOntextName';
+LoginContext.displayName = 'LoginContextName';
 
 const LoginContextProvider = ({ children }) => {
   const [isLogin, setLogin] = useState(false);
@@ -46,14 +46,11 @@ const LoginContextProvider = ({ children }) => {
     loginSetting(data, accessToken);
   };
 
-  const login = async (username, password) => {
+  const login = async (email, password) => {
     try {
-      const response = await auth.login(username, password);
-      const data = response.data;
-      const status = response.status;
-      const headers = response.headers;
-      const authorization = headers.authorization;
-      const accessToken = authorization.replace('Bearer ', '');
+      const result = await auth.login(email, password);
+      const { data, status } = result;
+      const accessToken = data.result.accessToken;
 
       if (status == 200) {
         Cookies.set('accessToken', accessToken);
@@ -62,7 +59,7 @@ const LoginContextProvider = ({ children }) => {
         navigate('/');
       }
     } catch (error) {
-      showAlert('로그인 실패');
+      showAlert(error.response.data.message);
     }
   };
 
