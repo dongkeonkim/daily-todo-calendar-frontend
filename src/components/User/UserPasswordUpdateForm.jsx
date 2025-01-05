@@ -4,15 +4,13 @@ import { LoginContext } from '@/contexts/LoginContextProvider';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '@/contexts/AlertContext';
 
-const UserPasswordUpdateForm = (props) => {
-  const { userInfo } = props.data;
+const UserPasswordUpdateForm = ({ userInfo }) => {
   const { isLogin, logout } = useContext(LoginContext);
   const navigate = useNavigate();
   const { showAlert } = useAlert();
 
   const updateUser = async (form) => {
     let response;
-    let data;
 
     try {
       response = await auth.update(form);

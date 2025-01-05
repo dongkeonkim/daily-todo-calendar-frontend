@@ -19,7 +19,8 @@ const User = () => {
     }
 
     const response = await auth.info();
-    const data = response.data;
+    const data = response.data.result;
+    console.log(data);
 
     setUserInfo(data);
   };

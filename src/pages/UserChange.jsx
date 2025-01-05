@@ -4,11 +4,11 @@ import { useLocation } from 'react-router-dom';
 
 function UserChange() {
   const location = useLocation();
-  const data = { userInfo: location.state.data };
+  const userInfo = location.state.data;
 
   return (
     <>
-      <UserPasswordUpdateForm data={data} />
+      <UserPasswordUpdateForm userInfo={userInfo} />
     </>
   );
 }

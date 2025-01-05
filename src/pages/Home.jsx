@@ -9,7 +9,7 @@ const Home = () => {
   const [notes, setNotes] = useState([]);
   const [contributions, setContributions] = useState([]);
   const [years, setYears] = useState([]);
-  const [currentYear, setCurrentYear] = useState(2024);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentDate, setCurrentDate] = useState(null);
   const [taskStats, setTaskStats] = useState({ successCnt: 0, goalCnt: 0 });
   const { showAlert } = useAlert();
@@ -19,7 +19,7 @@ const Home = () => {
   const fetchNotes = useCallback(async (year, date) => {
     try {
       const response = await api.get('/memo', { params: { year, date } });
-      const data = response.data.data.map((note) => ({ ...note }));
+      const data = response.data.result.map((note) => ({ ...note }));
       setNotes(data);
     } catch (error) {
       console.error('Failed to fetch notes:', error);
@@ -34,7 +34,7 @@ const Home = () => {
         params: { year, date },
       });
 
-      const grassGraph = response.data.data.calendar;
+      const grassGraph = response.data.result.calendar;
 
       const result = grassGraph.reduce(
         (acc, grass) => {
@@ -47,7 +47,7 @@ const Home = () => {
 
       setContributions(grassGraph);
       setTaskStats(result);
-      setYears(response.data.data.years);
+      setYears(response.data.result.years);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -81,7 +81,7 @@ const Home = () => {
     try {
       startLoading();
       const response = await api.post('/memo/create', noteData);
-      const data = response.data.data;
+      const data = response.data.result;
       data.scheduleDate = new Date(data.scheduleDate);
       setNotes((prevNotes) => [...prevNotes, data]);
       await fetchNotes(currentYear, currentDate);
