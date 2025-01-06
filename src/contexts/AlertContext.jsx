@@ -1,29 +1,69 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import CustomAlert from '@/components/Alerts/CustomAlert';
 
 const AlertContext = createContext();
 
 export const useAlert = () => useContext(AlertContext);
 
-export const AlertProvider = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState('');
+const initialAlertState = {
+  isOpen: false,
+  type: 'basic',
+  message: '',
+  onConfirm: null,
+};
 
-  // Alert 열기
-  const showAlert = (msg) => {
-    setMessage(msg);
-    setIsOpen(true);
+export const AlertProvider = ({ children }) => {
+  const [alertState, setAlertState] = useState(initialAlertState);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const showAlert = (message) => {
+    setAlertState((prevState) => ({
+      ...prevState,
+      isOpen: true,
+      type: 'basic',
+      message,
+      onConfirm: null,
+    }));
   };
 
-  // Alert 닫기
+  const showConfirmAlert = (message, onConfirm, onCancel) => {
+    setAlertState((prevState) => ({
+      ...prevState,
+      isOpen: true,
+      type: 'confirm',
+      message,
+      onConfirm: () => {
+        onConfirm && onConfirm();
+        closeAlert();
+      },
+      onCancel: () => {
+        onCancel ? onCancel() : closeAlert();
+      },
+    }));
+  };
+
   const closeAlert = () => {
-    setIsOpen(false);
+    if (isMounted.current) {
+      setAlertState(initialAlertState);
+    }
   };
 
   return (
-    <AlertContext.Provider value={{ showAlert }}>
+    <AlertContext.Provider value={{ showAlert, showConfirmAlert, closeAlert }}>
       {children}
-      <CustomAlert isOpen={isOpen} message={message} onClose={closeAlert} />
+      <CustomAlert {...alertState} onClose={closeAlert} />
     </AlertContext.Provider>
   );
 };

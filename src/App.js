@@ -7,8 +7,6 @@ import Login from './pages/Login';
 import Join from './pages/Join';
 import User from './pages/User';
 import LoginContextProvider from './contexts/LoginContextProvider';
-import UserChange from './pages/UserChange';
-import UserLeave from './pages/UserLeave';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import { AlertProvider } from './contexts/AlertContext';
 import { LoadingProvider } from './contexts/LoadingContext';
@@ -43,22 +41,6 @@ function AppContent() {
             element={
               <PrivateRoute>
                 <User />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path='/user/changeMember'
-            element={
-              <PrivateRoute>
-                <UserChange />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path='/user/leaveMember'
-            element={
-              <PrivateRoute>
-                <UserLeave />
               </PrivateRoute>
             }
           />
