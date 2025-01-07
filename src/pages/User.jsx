@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import * as auth from '@/apis/auth';
 import api from '@/apis/api';
@@ -13,24 +13,29 @@ const User = () => {
 
   const navigate = useNavigate();
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     if (!isLogin) {
       navigate('/login');
       return;
     }
 
-    const response = await auth.info();
-    const data = response.data.result;
+    try {
+      const response = await auth.info();
+      const data = response.data.result;
 
-    setUserInfo(data);
-  };
+      setUserInfo(data);
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+      navigate('/login');
+    }
+  }, [isLogin, navigate]);
 
   useEffect(() => {
     if (!isLogin) {
       return;
     }
     getUserInfo();
-  }, [isLogin]);
+  }, [isLogin, getUserInfo]);
 
   if (!userInfo) {
     return null;
@@ -96,7 +101,7 @@ const User = () => {
   };
 
   return (
-    <div className='flex justify-center items-center w-full h-screen'>
+    <div className='flex justify-center items-center w-full h-full'>
       <div className='flex flex-col w-1/4 h-full mt-16 text-base font-normal leading-normal text-gray-800'>
         <div className='p-4 flex flex-col text-sm items-center text-gray-600'>
           <div className='text-7xl'>👤</div>
@@ -164,9 +169,8 @@ const User = () => {
             취소
           </button>
         </div>
-        <div className='flex justify-between text-xs text-gray-500 mt-4'>
+        <div className='flex justify-end text-xs text-gray-500 mt-4'>
           <button onClick={handleDelete}>회원탈퇴</button>
-          {/* <button onClick={''}>비밀번호를 잊으셨습니까?</button> */}
         </div>
       </div>
     </div>

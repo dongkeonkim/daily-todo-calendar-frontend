@@ -105,7 +105,9 @@ const Calendar = ({
                   className='absolute top-0 left-0 bg-green-500 h-4 rounded-full'
                   style={{
                     width: `${
-                      (taskStats.successCnt / taskStats.goalCnt) * 100
+                      isNaN(taskStats.successCnt / taskStats.goalCnt)
+                        ? 0
+                        : (taskStats.successCnt / taskStats.goalCnt) * 100
                     }%`,
                   }}
                 ></div>
