@@ -8,7 +8,7 @@ export const login = (email, password) =>
 
 export const info = () => api.get(`/member/info`);
 
-export const join = (data) => api.post('/member/create', data);
+export const join = (data) => api.post('/auth/signUp', data);
 
 export const update = (data) => api.put('/member/update', data);
 
