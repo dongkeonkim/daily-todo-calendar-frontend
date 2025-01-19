@@ -22,7 +22,7 @@
   "scripts": {
     "start": "env-cmd -f .env.local craco start",
     "start:prod": "env-cmd -f .env.production craco start",
-    "build": "env-cmd -f .env.production craco build",
+    "build": "craco build",
     "test": "craco test"
   },
   "eslintConfig": {
