@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { LoginContext } from '@/contexts/LoginContextProvider';
 import logoImage from '@/image/logo.webp';
 
-const Header = () => {
+/**
+ * 애플리케이션 상단 헤더 컴포넌트
+ * 로고 및 로그인/회원가입 또는 마이페이지/로그아웃 메뉴 표시
+ */
+const Header: React.FC = () => {
   const { isLogin, logout } = useContext(LoginContext);
 
-  const handleClick = (e) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!isLogin) {
       e.preventDefault();
     }
@@ -20,7 +24,11 @@ const Header = () => {
           className='font-medium flex items-center space-x-2'
           onClick={handleClick}
         >
-          <img src={logoImage} alt='' className='h-6 w-6 bg-black rounded' />
+          <img
+            src={logoImage}
+            alt='로고'
+            className='h-6 w-6 bg-black rounded'
+          />
           <h1 className='text-black font-medium'>Todo Calendar</h1>
         </a>
       </div>
@@ -29,12 +37,18 @@ const Header = () => {
           <div>
             <ul className='flex space-x-4'>
               <li>
-                <Link className='text-sm' to='/login'>
+                <Link
+                  className='text-sm hover:text-blue-500 transition-colors'
+                  to='/login'
+                >
                   로그인
                 </Link>
               </li>
               <li>
-                <Link className='text-sm' to='/join'>
+                <Link
+                  className='text-sm hover:text-blue-500 transition-colors'
+                  to='/join'
+                >
                   회원가입
                 </Link>
               </li>
@@ -43,14 +57,20 @@ const Header = () => {
         ) : (
           <ul className='flex space-x-4'>
             <li>
-              <Link className='text-sm' to='/user'>
+              <Link
+                className='text-sm hover:text-blue-500 transition-colors'
+                to='/user'
+              >
                 마이페이지
               </Link>
             </li>
             <li>
-              <Link className='text-sm' onClick={() => logout()}>
+              <button
+                className='text-sm hover:text-blue-500 transition-colors'
+                onClick={() => logout()}
+              >
                 로그아웃
-              </Link>
+              </button>
             </li>
           </ul>
         )}

@@ -4,23 +4,43 @@ import React, {
   useState,
   useEffect,
   useRef,
+  ReactNode,
 } from 'react';
 import CustomAlert from '@/components/Alerts/CustomAlert';
+import { AlertContextType } from '@/types';
 
-const AlertContext = createContext();
+const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
-export const useAlert = () => useContext(AlertContext);
+export const useAlert = (): AlertContextType => {
+  const context = useContext(AlertContext);
+  if (!context) {
+    throw new Error('useAlert must be used within an AlertProvider');
+  }
+  return context;
+};
 
-const initialAlertState = {
+interface AlertState {
+  isOpen: boolean;
+  type: 'basic' | 'confirm';
+  message: string;
+  onConfirm: (() => void) | null;
+  onCancel?: () => void;
+}
+
+const initialAlertState: AlertState = {
   isOpen: false,
   type: 'basic',
   message: '',
   onConfirm: null,
 };
 
-export const AlertProvider = ({ children }) => {
-  const [alertState, setAlertState] = useState(initialAlertState);
-  const isMounted = useRef(true);
+interface AlertProviderProps {
+  children: ReactNode;
+}
+
+export const AlertProvider: React.FC<AlertProviderProps> = ({ children }) => {
+  const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
+  const isMounted = useRef<boolean>(true);
 
   useEffect(() => {
     return () => {
@@ -28,7 +48,7 @@ export const AlertProvider = ({ children }) => {
     };
   }, []);
 
-  const showAlert = (message) => {
+  const showAlert = (message: string): void => {
     setAlertState((prevState) => ({
       ...prevState,
       isOpen: true,
@@ -38,7 +58,11 @@ export const AlertProvider = ({ children }) => {
     }));
   };
 
-  const showConfirmAlert = (message, onConfirm, onCancel) => {
+  const showConfirmAlert = (
+    message: string, 
+    onConfirm: () => void, 
+    onCancel?: () => void
+  ): void => {
     setAlertState((prevState) => ({
       ...prevState,
       isOpen: true,
@@ -54,7 +78,7 @@ export const AlertProvider = ({ children }) => {
     }));
   };
 
-  const closeAlert = () => {
+  const closeAlert = (): void => {
     if (isMounted.current) {
       setAlertState(initialAlertState);
     }

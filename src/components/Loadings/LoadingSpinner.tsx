@@ -1,7 +1,11 @@
 import React from 'react';
 import { useLoading } from '@/contexts/LoadingContext';
 
-const LoadingSpinner = () => {
+/**
+ * 로딩 상태를 시각적으로 표시하는 스피너 컴포넌트
+ * LoadingContext를 통해 로딩 상태를 구독
+ */
+const LoadingSpinner: React.FC = () => {
   const { isLoading } = useLoading();
 
   if (!isLoading) return null;

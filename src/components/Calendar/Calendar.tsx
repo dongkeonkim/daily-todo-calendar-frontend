@@ -1,59 +1,56 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
+import { CalendarItem, TaskStats } from '@/types';
+import {
+  getColor,
+  getDaysOfYear,
+  getDateString,
+  getISODateString,
+} from '@/utils/calendarUtils';
 
-function getDaysOfYear(year) {
-  let count = 0;
-  const startDate = new Date(year, 0, 1); // 1월 1일
-  const endDate = new Date(year + 1, 0, 1); // 다음 해 1월 1일
-
-  for (let date = startDate; date < endDate; date.setDate(date.getDate() + 1)) {
-    count++;
-  }
-
-  return count;
+interface CalendarProps {
+  contributions: CalendarItem[];
+  years: string[];
+  currentYear: number | null;
+  taskStats: TaskStats;
+  onDateChange: (year: string | number | null, date: string | null) => void;
 }
 
-const getDateString = (currentYear, index) => {
-  const startDate = new Date(currentYear, 0, 1);
-  const currentDate = new Date(startDate);
-  currentDate.setDate(startDate.getDate() + index);
-  return currentDate.toLocaleDateString('ko-KR', {
-    month: 'long',
-    day: 'numeric',
-  });
-};
-
-const getISODateString = (currentYear, index) => {
-  const startDate = new Date(currentYear, 0, 1);
-  const currentDate = new Date(startDate);
-  currentDate.setDate(startDate.getDate() + index);
-
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currentDate.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
-const Calendar = ({
+/**
+ * 할일 달성 현황을 시각화하는 캘린더 컴포넌트
+ */
+const Calendar: React.FC<CalendarProps> = ({
   contributions,
   years,
   currentYear,
   taskStats,
   onDateChange,
-  fetchContributions,
 }) => {
-  const handleClick = async (year, index) => {
-    const date = getISODateString(currentYear, index);
+  // 날짜를 클릭했을 때 해당 날짜의 할일 목록으로 이동
+  const handleClick = async (year: number | null, index: number) => {
+    if (year === null) return;
+
+    const date = getISODateString(year, index);
     onDateChange(year, date);
   };
 
-  const daysInYear = getDaysOfYear(currentYear);
-  const weeks = Math.ceil(daysInYear / 7);
+  // 현재 선택된 연도의 일 수와 주 수 계산
+  const { daysInYear, weeks } = useMemo(() => {
+    if (currentYear === null) {
+      return { daysInYear: 0, weeks: 0 };
+    }
+    const days = getDaysOfYear(currentYear);
+    return {
+      daysInYear: days,
+      weeks: Math.ceil(days / 7),
+    };
+  }, [currentYear]);
 
+  // 셀 크기 정의
   const cellSize = '14px';
 
+  // 날짜 셀 기본 스타일
   const dayStyle = {
     width: cellSize,
     height: cellSize,
@@ -64,50 +61,45 @@ const Calendar = ({
     cursor: 'pointer',
   };
 
-  const getColor = (successCnt, totalCnt) => {
-    if (totalCnt === 0) return '#ebedf0';
-
-    const ratio = successCnt / totalCnt;
-    const colorIndex = Math.min(Math.ceil(ratio * 4), 4);
-    const colors = ['#ebedf0', '#b8f890', '#a3f66e', '#8df44c', '#78f22b'];
-
-    return colors[colorIndex];
-  };
+  // 달성률 표시를 위한 백분율 계산
+  const completionPercentage = useMemo(() => {
+    if (taskStats.goalCnt === 0) return 0;
+    return (taskStats.successCnt / taskStats.goalCnt) * 100;
+  }, [taskStats]);
 
   return (
     <>
+      {/* 연도 선택 버튼 */}
       <div className='flex justify-center space-x-2 pt-4 pb-2'>
         {years.map((year) => (
           <button
             key={year}
-            className={`text-base p-1 rounded-sm border ${(() => {
-              if (
-                year == currentYear ||
-                (year === '전체' && currentYear == null)
-              ) {
-                return 'bg-black text-white';
-              } else {
-                return '';
-              }
-            })()}`}
-            onClick={() => onDateChange(year, null)}
+            className={`text-base p-1 rounded-sm border ${
+              year === currentYear?.toString() ||
+              (year === '전체' && currentYear === null)
+                ? 'bg-black text-white'
+                : 'hover:bg-gray-200 transition-colors'
+            }`}
+            onClick={() =>
+              onDateChange(year === '전체' ? null : parseInt(year), null)
+            }
           >
             {year}
           </button>
         ))}
       </div>
+
       {currentYear !== null && (
         <>
+          {/* 진행률 표시 바 */}
           <div className='flex justify-center p-1'>
             <div className='w-full max-w-lg bg-white'>
               <div className='relative bg-black rounded-full h-4 mb-2'>
                 <div
-                  className='absolute top-0 left-0 bg-green-500 h-4 rounded-full'
+                  className='absolute top-0 left-0 bg-green-500 h-4 rounded-full transition-all duration-500'
                   style={{
                     width: `${
-                      isNaN(taskStats.successCnt / taskStats.goalCnt)
-                        ? 0
-                        : (taskStats.successCnt / taskStats.goalCnt) * 100
+                      isNaN(completionPercentage) ? 0 : completionPercentage
                     }%`,
                   }}
                 ></div>
@@ -120,6 +112,7 @@ const Calendar = ({
             </div>
           </div>
 
+          {/* 캘린더 그리드 */}
           <div
             style={{
               display: 'grid',
@@ -137,6 +130,7 @@ const Calendar = ({
               Array.from({ length: 7 }).map((_, dayIndex) => {
                 const index = weekIndex * 7 + dayIndex;
                 if (index >= daysInYear) return null;
+
                 const dateString = getDateString(currentYear, index);
                 const isoDateString = getISODateString(currentYear, index);
 
@@ -149,7 +143,7 @@ const Calendar = ({
 
                 return (
                   <div
-                    key={index}
+                    key={`${weekIndex}-${dayIndex}`}
                     style={{
                       ...dayStyle,
                       backgroundColor: getColor(successCnt, totalCnt),
@@ -161,12 +155,14 @@ const Calendar = ({
                 );
               })
             )}
+
+            {/* 툴팁 */}
             {Array.from({ length: daysInYear }).map((_, index) => (
               <Tooltip
-                key={index}
+                key={`tooltip-${index}`}
                 id={`tooltip-${index}`}
                 place='top'
-                effect='solid'
+                // effect='solid'
               />
             ))}
           </div>

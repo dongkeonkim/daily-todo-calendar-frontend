@@ -12,7 +12,10 @@ import { AlertProvider } from './contexts/AlertContext';
 import { LoadingProvider } from './contexts/LoadingContext';
 import LoadingSpinner from './components/Loadings/LoadingSpinner';
 
-function App() {
+/**
+ * 애플리케이션 루트 컴포넌트
+ */
+const App: React.FC = () => {
   return (
     <BrowserRouter>
       <LoadingProvider>
@@ -25,17 +28,20 @@ function App() {
       </LoadingProvider>
     </BrowserRouter>
   );
-}
+};
 
-function AppContent() {
+/**
+ * 메인 앱 컨텐츠 컴포넌트
+ */
+const AppContent: React.FC = () => {
   return (
     <div className='flex flex-col min-h-screen'>
       <Header />
       <div className='flex-grow'>
         <Routes>
-          <Route path='/' element={<Home />}></Route>
-          <Route path='/login' element={<Login />}></Route>
-          <Route path='/join' element={<Join />}></Route>
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/join' element={<Join />} />
           <Route
             path='/user'
             element={
@@ -48,6 +54,6 @@ function AppContent() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

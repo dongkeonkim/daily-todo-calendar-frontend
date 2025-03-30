@@ -1,6 +1,22 @@
 import React from 'react';
 
-const CustomAlert = ({ isOpen, type, message, onConfirm, onClose }) => {
+interface CustomAlertProps {
+  isOpen: boolean;
+  type: 'basic' | 'confirm';
+  message: string;
+  onConfirm: (() => void) | null;
+  onClose: () => void;
+  onCancel?: () => void;
+}
+
+const CustomAlert: React.FC<CustomAlertProps> = ({
+  isOpen,
+  type,
+  message,
+  onConfirm,
+  onClose,
+  onCancel,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -11,24 +27,24 @@ const CustomAlert = ({ isOpen, type, message, onConfirm, onClose }) => {
           {type === 'confirm' ? (
             <>
               <button
-                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600'
-                onClick={onConfirm}
+                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors'
+                onClick={onConfirm || onClose}
               >
                 확인
               </button>
               <button
-                className='bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400'
-                onClick={onClose}
+                className='bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400 transition-colors'
+                onClick={onCancel || onClose}
               >
                 취소
               </button>
             </>
           ) : (
             <button
-              className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600'
+              className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors'
               onClick={onClose}
             >
-              OK
+              확인
             </button>
           )}
         </div>
