@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import api from '@/apis/api';
 import { useAlert } from '@/contexts/AlertContext';
 import { useLoading } from '@/contexts/LoadingContext';
@@ -36,6 +36,7 @@ export const useMemoData = () => {
     successCnt: 0,
     goalCnt: 0,
   });
+  const isFirstRender = useRef(true);
 
   const { showAlert } = useAlert();
   const { startLoading, finishLoading } = useLoading();
@@ -58,7 +59,7 @@ export const useMemoData = () => {
         return [];
       }
     },
-    []
+    [setNotes]
   );
 
   // 캘린더 데이터 조회
@@ -94,33 +95,53 @@ export const useMemoData = () => {
         return null;
       }
     },
-    []
+    [setContributions, setTaskStats, setYears]
   );
 
-  // 데이터 로드
-  const loadData = useCallback(async () => {
-    startLoading();
-    try {
-      await fetchNotes(currentYear, currentDate);
-      await fetchContributions(currentYear, currentDate);
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      finishLoading();
-    }
-  }, [
-    currentYear,
-    currentDate,
-    fetchNotes,
-    fetchContributions,
-    startLoading,
-    finishLoading,
-  ]);
-
-  // 초기 데이터 로드
+  // 초기 데이터 로드 (첫 렌더링에서만 실행)
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      const initialLoad = async () => {
+        startLoading();
+        try {
+          const params: Record<string, string | number> = {};
+          if (currentYear !== null) params.year = currentYear;
+
+          const notesResponse = await api.get<MemoDataResponse>('/memo', {
+            params,
+          });
+          setNotes(notesResponse.data.result.map((note) => ({ ...note })));
+
+          const calendarResponse = await api.get<CalendarDataResponse>(
+            '/memo/calendar',
+            { params }
+          );
+          const calendarData = calendarResponse.data.result;
+
+          const result = calendarData.calendar.reduce(
+            (acc, grass) => {
+              acc.successCnt += grass.successCnt;
+              acc.goalCnt += grass.totalCnt;
+              return acc;
+            },
+            { successCnt: 0, goalCnt: 0 }
+          );
+
+          setContributions(calendarData.calendar);
+          setTaskStats(result);
+          setYears(calendarData.years);
+        } catch (error) {
+          console.error('Error loading initial data:', error);
+        } finally {
+          finishLoading();
+        }
+      };
+
+      initialLoad();
+    }
+  }, []);
 
   // 날짜 변경 핸들러
   const onDateChange = async (
@@ -171,6 +192,7 @@ export const useMemoData = () => {
       const data = response.data.result;
       data.scheduleDate = new Date(data.scheduleDate);
       await fetchNotes(currentYear, currentDate);
+      await fetchContributions(currentYear, currentDate);
       return data;
     } catch (error) {
       showAlert('메모 저장에 실패했습니다.');
@@ -200,6 +222,7 @@ export const useMemoData = () => {
       startLoading();
       await api.put('/memo/update', noteData);
       await fetchNotes(currentYear, currentDate);
+      await fetchContributions(currentYear, currentDate);
     } catch (error) {
       showAlert('메모 수정에 실패했습니다.');
       throw error;
@@ -215,6 +238,7 @@ export const useMemoData = () => {
       await api.delete(`/memo/delete/${id}`);
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
       await fetchNotes(currentYear, currentDate);
+      await fetchContributions(currentYear, currentDate);
     } catch (error) {
       showAlert('메모 삭제에 실패했습니다.');
       throw error;
