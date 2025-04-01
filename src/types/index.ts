@@ -73,6 +73,7 @@ export interface LoginContextType {
   isLogin: boolean;
   userInfo: User | null;
   login: (email: string, password: string) => Promise<void>;
+  kakaoLogin: (code: string) => Promise<void>;
   logout: () => void;
 }
 

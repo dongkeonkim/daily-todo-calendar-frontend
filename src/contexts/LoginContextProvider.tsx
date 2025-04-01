@@ -10,6 +10,7 @@ export const LoginContext = createContext<LoginContextType>({
   isLogin: false,
   userInfo: null,
   login: async () => {},
+  kakaoLogin: async () => {},
   logout: () => {},
 });
 
@@ -72,6 +73,22 @@ const LoginContextProvider: React.FC<LoginContextProviderProps> = ({
     }
   };
 
+  const kakaoLogin = async (code: string): Promise<void> => {
+    try {
+      const result = await auth.kakaoLogin(code);
+      const { data, status } = result;
+      const accessToken = data.result.accessToken;
+
+      if (status === 200) {
+        Cookies.set('accessToken', accessToken);
+        await loginCheck();
+        navigate('/');
+      }
+    } catch (error: any) {
+      showAlert(error.response?.data?.message || '로그인에 실패했습니다.');
+    }
+  };
+
   const loginSetting = (userData: User, accessToken: string): void => {
     api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -101,7 +118,9 @@ const LoginContextProvider: React.FC<LoginContextProviderProps> = ({
   }, []);
 
   return (
-    <LoginContext.Provider value={{ isLogin, userInfo, login, logout }}>
+    <LoginContext.Provider
+      value={{ isLogin, userInfo, login, kakaoLogin, logout }}
+    >
       {children}
     </LoginContext.Provider>
   );

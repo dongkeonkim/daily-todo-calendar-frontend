@@ -19,6 +19,9 @@ export const login = (email: string, password: string) =>
     password,
   });
 
+export const kakaoLogin = (code: string) =>
+  api.get<ApiResponse<AuthResponse>>(`/auth/kakao/callback?code=${code}`);
+
 export const info = () => api.get<ApiResponse<User>>(`/member/info`);
 
 export const join = (data: JoinForm) =>
