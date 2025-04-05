@@ -4,6 +4,7 @@ export interface User {
   email: string;
   name: string;
   role: string;
+  kakaoId?: number | null;
   delYn: boolean;
   regDate: string;
   udtDate: string;
