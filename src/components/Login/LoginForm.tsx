@@ -1,9 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { LoginContext } from '@/contexts/LoginContextProvider';
+import { useTheme } from '@/contexts/ThemeContext';
 import KakaoLoginButton from './KakaoLoginbutton';
 
 const LoginForm: React.FC = () => {
   const { login, kakaoLogin } = useContext(LoginContext);
+  const { darkMode } = useTheme();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -36,12 +38,14 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-[calc(100vh-64px)] bg-gray-100'>
-      <h1 className='mb-5 text-4xl font-bold text-blue-900 bg-gray-100'>
-        Login
-      </h1>
+    <div className={`flex flex-col items-center justify-center min-h-[calc(100vh-64px)] ${darkMode ? 'bg-gray-900' : 'bg-white'} px-4`}>
+      <div className={`w-full max-w-md ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-lg shadow-md p-8 border animate-fade-in`}>
+        <h1 className={`mb-8 text-2xl font-bold text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+          로그인
+          <div className='h-1 w-24 bg-primary-500 mx-auto mt-2'></div>
+        </h1>
 
-      <form onSubmit={handleLogin} className='w-64'>
+        <form onSubmit={handleLogin} className='space-y-6'>
         <input
           type='email'
           id='email'
@@ -49,7 +53,7 @@ const LoginForm: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500'
+          className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
         />
 
         <input
@@ -59,19 +63,39 @@ const LoginForm: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500'
+          className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
         />
 
         <button
           type='submit'
           disabled={isSubmitting}
-          className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mb-4'
+          className='w-full px-6 py-3 font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:translate-y-[-2px] hover:shadow-lg'
         >
           {isSubmitting ? '로그인 중...' : '로그인'}
         </button>
 
-        <KakaoLoginButton onClick={handleKakaoLogin} />
-      </form>
+        <div className='pt-4'>
+          <div className='relative'>
+            <div className='absolute inset-0 flex items-center'>
+              <div className='w-full border-t border-gray-300 dark:border-gray-700'></div>
+            </div>
+            <div className='relative flex justify-center text-sm'>
+              <span className={`px-2 ${darkMode ? 'text-gray-400 bg-gray-800' : 'text-gray-500 bg-white'}`}>또는</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className='mt-6'>
+          <KakaoLoginButton onClick={handleKakaoLogin} />
+        </div>
+        
+        <div className='mt-8 text-center'>
+          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            계정이 없으신가요? <a href='/join' className={`font-medium ${darkMode ? 'text-primary-400 hover:text-primary-300' : 'text-primary-600 hover:text-primary-500'}`}>회원가입</a>
+          </p>
+        </div>
+        </form>
+      </div>
     </div>
   );
 };

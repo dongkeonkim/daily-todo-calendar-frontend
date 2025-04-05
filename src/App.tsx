@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Home from './pages/Home';
@@ -12,6 +12,7 @@ import { AlertProvider } from './contexts/AlertContext';
 import { LoadingProvider } from './contexts/LoadingContext';
 import LoadingSpinner from './components/Loadings/LoadingSpinner';
 import KakaoCallback from './pages/KakaoCallback';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 /**
  * 애플리케이션 루트 컴포넌트
@@ -33,14 +34,16 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <LoadingProvider>
-        <LoadingSpinner />
-        <AlertProvider>
-          <LoginContextProvider>
-            <AppContent />
-          </LoginContextProvider>
-        </AlertProvider>
-      </LoadingProvider>
+      <ThemeProvider>
+        <LoadingProvider>
+          <LoadingSpinner />
+          <AlertProvider>
+            <LoginContextProvider>
+              <AppContent />
+            </LoginContextProvider>
+          </AlertProvider>
+        </LoadingProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };
@@ -50,7 +53,7 @@ const App: React.FC = () => {
  */
 const AppContent: React.FC = () => {
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300'>
       <Header />
       <div className='flex-grow'>
         <Routes>

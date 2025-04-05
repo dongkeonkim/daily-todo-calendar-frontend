@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Memo, Todo } from '@/types';
 import NoteCard from './NoteCard';
 import NoteModal from './NoteModal';
+import { FaPlus } from 'react-icons/fa';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface NotesProps {
   notes: Memo[];
@@ -32,6 +34,8 @@ const Notes: React.FC<NotesProps> = ({
   saveNote,
   updateNote,
 }) => {
+  const { darkMode } = useTheme();
+  
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -87,21 +91,30 @@ const Notes: React.FC<NotesProps> = ({
 
   return (
     <>
-      <div className='flex w-full justify-center mb-6'>
+      <div className="flex justify-center mb-8 w-full max-w-3xl mx-auto">
         <button
           onClick={openModal}
-          className='w-full md:w-1/3 py-3 text-black border shadow rounded-md hover:bg-gray-100 transition-colors flex items-center justify-center'
+          className={`py-3 px-6 rounded-lg shadow-md ${
+            darkMode
+              ? 'bg-primary-600 text-white hover:bg-primary-700'
+              : 'bg-primary-500 text-white hover:bg-primary-600'
+          } transition-colors transform hover:scale-105 flex items-center gap-2 font-medium`}
         >
-          새로운 메모
+          <FaPlus />
+          새로운 메모 추가
         </button>
       </div>
 
       {notes.length === 0 ? (
-        <div className='text-center text-gray-500 py-10'>
-          등록된 메모가 없습니다. 새로운 메모를 추가해보세요!
+        <div className={`text-center py-12 rounded-lg ${darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-500'} shadow-md border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <p className="text-lg">등록된 메모가 없습니다.</p>
+          <p className="mt-2">새로운 메모를 추가해보세요!</p>
         </div>
       ) : (
-        <div className='mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full'>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {notes.map((note, noteIndex) => (
             <NoteCard
               key={note.id || noteIndex}

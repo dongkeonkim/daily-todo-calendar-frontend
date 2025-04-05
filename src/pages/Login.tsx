@@ -17,7 +17,11 @@ const Login: React.FC = () => {
     }
   }, [isLogin, navigate]);
 
-  return <LoginForm />;
+  return (
+    <div className="min-h-screen bg-white">
+      <LoginForm />
+    </div>
+  );
 };
 
 export default Login;

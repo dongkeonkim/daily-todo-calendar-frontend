@@ -1,8 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Noto Sans KR', Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -15,7 +21,7 @@ ul {
 
 a {
   text-decoration: none;
-  color: black;
+  color: inherit;
 }
 
 button {
@@ -24,10 +30,70 @@ button {
 
 .link {
   background-color: transparent;
-  color: black;
+  color: inherit;
   border: none;
 }
 
 :root {
-  --font-size-main: 20px;
+  --font-size-main: 16px;
+}
+
+/* 다크 모드 전환 애니메이션 */
+.dark body {
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* React DatePicker 다크 모드 지원 */
+.dark .react-datepicker {
+  background-color: #1f2937;
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+.dark .react-datepicker__header {
+  background-color: #374151;
+  border-bottom-color: #4b5563;
+}
+
+.dark .react-datepicker__current-month,
+.dark .react-datepicker__day-name,
+.dark .react-datepicker__day {
+  color: #f3f4f6;
+}
+
+.dark .react-datepicker__day:hover {
+  background-color: #4b5563;
+}
+
+.dark .react-datepicker__day--selected,
+.dark .react-datepicker__day--keyboard-selected {
+  background-color: #6366f1;
+  color: white;
+}
+
+.dark .react-datepicker__day--outside-month {
+  color: #9ca3af;
+}
+
+/* 페이지 전환 애니메이션 */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
 }

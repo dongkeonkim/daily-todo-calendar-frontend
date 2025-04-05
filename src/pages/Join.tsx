@@ -24,7 +24,7 @@ const Join: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-white">
       <JoinForm join={join} errors={errors} />
     </div>
   );

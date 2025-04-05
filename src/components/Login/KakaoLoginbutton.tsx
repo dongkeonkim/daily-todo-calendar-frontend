@@ -9,12 +9,12 @@ const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({ onClick }) => {
     <button
       type='button'
       onClick={onClick}
-      className='flex items-center justify-center w-full py-2.5 px-4 bg-[#FEE500] rounded-md hover:bg-[#FFEB3B] text-[rgba(0,0,0,0.85)] font-medium text-base transition-colors'
+      className='flex items-center justify-center w-full py-3 px-6 bg-[#FEE500] rounded-lg hover:bg-[#FFEB3B] text-[rgba(0,0,0,0.85)] font-medium text-base transition-all duration-200 transform hover:translate-y-[-2px] hover:shadow-lg'
     >
       <span className='mr-2'>
         <svg
-          width='18'
-          height='18'
+          width='22'
+          height='22'
           viewBox='0 0 18 18'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'

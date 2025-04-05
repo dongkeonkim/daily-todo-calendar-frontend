@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import * as auth from '@/apis/auth';
 import api from '@/apis/api';
 import { LoginContext } from '@/contexts/LoginContextProvider';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '@/contexts/AlertContext';
 import { User as UserType } from '@/types';
@@ -19,6 +20,7 @@ const User: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserFormData | null>(null);
   const [isKakaoUser, setIsKakaoUser] = useState<boolean>(false);
   const { isLogin, logout } = useContext(LoginContext);
+  const { darkMode } = useTheme();
   const { showAlert, showConfirmAlert, closeAlert } = useAlert();
 
   const navigate = useNavigate();
@@ -160,21 +162,27 @@ const User: React.FC = () => {
   };
 
   return (
-    <div className='flex justify-center items-center w-full h-full'>
-      <div className='flex flex-col w-full max-w-md h-full mt-16 text-base font-normal leading-normal text-gray-800 px-4'>
-        <div className='p-4 flex flex-col text-sm items-center text-gray-600'>
-          <div className='text-7xl'>👤</div>
-          <label>{userInfo.email}</label>
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-white'} flex justify-center items-center w-full py-10`}>
+      <div className={`flex flex-col w-full max-w-md text-base font-normal leading-normal ${darkMode ? 'text-gray-200' : 'text-gray-800'} p-8 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-md border ${darkMode ? 'border-gray-700' : 'border-gray-200'} animate-fade-in`}>
+        <div className={`flex flex-col text-sm items-center ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-8`}>
+          <div className='h-24 w-24 bg-primary-100 rounded-full flex items-center justify-center mb-4'>
+            <div className='text-5xl'>👤</div>
+          </div>
+          <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-1`}>{userInfo.name || '닉네임 미설정'}</h2>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>{userInfo.email}</p>
           {isKakaoUser && (
-            <span className='mt-1 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full'>
-              카카오 계정
+            <span className='px-3 py-1 bg-primary-100 text-primary-800 text-xs font-medium rounded-full shadow-sm'>
+              카카오 계정 연동됨
             </span>
           )}
         </div>
-
-        <div className='mb-2'>
+        <div className='space-y-5'>
+        <div>
+          <label htmlFor='name' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
+            닉네임
+          </label>
           <input
-            className='w-full px-4 py-2 border border-gray-300 rounded placeholder-gray-400 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
             type='text'
             id='name'
             placeholder='닉네임'
@@ -188,9 +196,12 @@ const User: React.FC = () => {
 
         {!isKakaoUser && (
           <>
-            <div className='mb-2'>
+            <div>
+              <label htmlFor='password' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
+                현재 비밀번호
+              </label>
               <input
-                className='w-full px-4 py-2 border border-gray-300 rounded placeholder-gray-400 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
                 type='password'
                 id='password'
                 placeholder='비밀번호'
@@ -200,9 +211,12 @@ const User: React.FC = () => {
                 required
               />
             </div>
-            <div className='mb-2'>
+            <div className='mt-5'>
+              <label htmlFor='newPassword' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
+                새 비밀번호
+              </label>
               <input
-                className='w-full px-4 py-2 border border-gray-300 rounded placeholder-gray-400 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
                 type='password'
                 id='newPassword'
                 placeholder='새 비밀번호'
@@ -211,9 +225,12 @@ const User: React.FC = () => {
                 name='newPassword'
               />
             </div>
-            <div className='mb-2'>
+            <div className='mt-5'>
+              <label htmlFor='againPassword' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
+                새 비밀번호 확인
+              </label>
               <input
-                className='w-full px-4 py-2 border border-gray-300 rounded placeholder-gray-400 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
                 type='password'
                 id='againPassword'
                 placeholder='새 비밀번호 확인'
@@ -225,27 +242,29 @@ const User: React.FC = () => {
           </>
         )}
 
-        <div className='flex justify-center mt-2'>
+        <div className='flex flex-col space-y-3 mt-8'>
           <button
-            className='bg-blue-500 text-white py-2 text-sm px-4 rounded hover:bg-blue-600 mr-1 transition-colors'
+            className={`w-full px-6 py-3 font-medium text-white ${darkMode ? 'bg-primary-600 hover:bg-primary-700' : 'bg-primary-500 hover:bg-primary-600'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 transition-all duration-200 transform hover:translate-y-[-2px] hover:shadow-lg`}
             onClick={handleUpdate}
           >
-            {isKakaoUser ? '닉네임만 변경' : '정보 변경'}
+            {isKakaoUser ? '닉네임 변경하기' : '정보 변경하기'}
           </button>
           <button
-            className='bg-gray-300 text-gray-800 text-sm py-2 px-4 rounded hover:bg-gray-400 transition-colors'
+            className={`w-full px-6 py-3 font-medium ${darkMode ? 'text-gray-300 bg-gray-700 hover:bg-gray-600' : 'text-gray-700 bg-gray-200 hover:bg-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all duration-200`}
             onClick={() => navigate('/')}
           >
-            취소
+            홈으로 돌아가기
           </button>
         </div>
-        <div className='flex justify-end text-xs text-gray-500 mt-4'>
+        
+        <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} mt-6 pt-6 text-center`}>
           <button
             onClick={handleDelete}
-            className='hover:text-red-500 transition-colors'
+            className={`text-sm ${darkMode ? 'text-gray-400 hover:text-red-400 hover:bg-red-900' : 'text-gray-500 hover:text-red-500 hover:bg-red-50'} transition-colors px-4 py-2 rounded-full`}
           >
             {isKakaoUser ? '카카오 연결 해제 및 탈퇴' : '회원탈퇴'}
           </button>
+        </div>
         </div>
       </div>
     </div>
