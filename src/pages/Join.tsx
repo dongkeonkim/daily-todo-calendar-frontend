@@ -5,6 +5,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import * as auth from '@/apis/auth';
 import JoinForm from '@/components/Join/JoinForm';
 import { FormErrors, JoinForm as JoinFormType } from '@/types';
+import { getErrorMessage, getFieldErrors } from '@/utils/errorHandlers';
 
 /**
  * 회원가입 페이지 컴포넌트
@@ -21,7 +22,10 @@ const Join: React.FC = () => {
       showAlert('회원가입이 성공하였습니다');
       navigate('/login');
     } catch (error: any) {
-      setErrors(error.response?.data?.result || {});
+      setErrors(getFieldErrors(error));
+      showAlert(
+        getErrorMessage(error, '회원가입 처리 중 오류가 발생했습니다.')
+      );
     }
   };
 

@@ -5,6 +5,7 @@ import * as auth from '@/apis/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from './AlertContext';
 import { LoginContextType, User } from '@/types';
+import { getErrorMessage } from '@/utils/errorHandlers';
 
 export const LoginContext = createContext<LoginContextType>({
   isLogin: false,
@@ -69,7 +70,7 @@ const LoginContextProvider: React.FC<LoginContextProviderProps> = ({
         navigate('/');
       }
     } catch (error: any) {
-      showAlert(error.response?.data?.message || '로그인에 실패했습니다.');
+      showAlert(getErrorMessage(error, '로그인에 실패했습니다.'));
     }
   };
 
@@ -85,7 +86,7 @@ const LoginContextProvider: React.FC<LoginContextProviderProps> = ({
         navigate('/');
       }
     } catch (error: any) {
-      showAlert(error.response?.data?.message || '로그인에 실패했습니다.');
+      showAlert(getErrorMessage(error, '카카오 로그인에 실패했습니다.'));
     }
   };
 
@@ -114,7 +115,6 @@ const LoginContextProvider: React.FC<LoginContextProviderProps> = ({
 
   useEffect(() => {
     loginCheck();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
