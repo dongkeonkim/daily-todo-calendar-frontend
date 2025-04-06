@@ -37,7 +37,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
   const [todoContent, setTodoContent] = useState<string>('');
   const [currentTodos, setCurrentTodos] = useState<Todo[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  
+
   // 모달이 열릴 때 데이터 초기화
   useEffect(() => {
     if (isOpen) {
@@ -66,13 +66,13 @@ const NoteModal: React.FC<NoteModalProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
-  
+
   // 할일 추가
   const addTodo = () => {
     if (todoContent.trim() !== '') {
       setCurrentTodos([
         ...currentTodos,
-        { text: todoContent, done: false },
+        { content: todoContent, completed: false },
       ]);
       setTodoContent('');
     }
@@ -96,7 +96,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
     setCurrentTodos(
       currentTodos.map((todo, i) => {
         if (i === index) {
-          return { ...todo, done: !todo.done };
+          return { ...todo, completed: !todo.completed };
         }
         return todo;
       })
@@ -107,41 +107,51 @@ const NoteModal: React.FC<NoteModalProps> = ({
   const handleSaveNote = () => {
     onSave(note.id, noteTitle, noteContent, currentTodos, selectedDate);
   };
-  
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50">
-      <div className={`relative rounded-xl shadow-xl overflow-hidden w-full max-w-lg max-h-[90vh] 
-        ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} transition-colors`}>
-        
+    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50'>
+      <div
+        className={`relative rounded-xl shadow-xl overflow-hidden w-full max-w-lg max-h-[90vh] 
+        ${
+          darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
+        } transition-colors`}
+      >
         {/* Header */}
-        <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center`}>
-          <h3 className="text-lg font-semibold">
+        <div
+          className={`p-4 border-b ${
+            darkMode ? 'border-gray-700' : 'border-gray-200'
+          } flex justify-between items-center`}
+        >
+          <h3 className='text-lg font-semibold'>
             {isEdit ? '메모 수정' : '새 메모 추가'}
           </h3>
-          <button 
+          <button
             onClick={onClose}
             className={`p-1 rounded-full ${
-              darkMode 
-                ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-200' 
+              darkMode
+                ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-200'
                 : 'hover:bg-gray-200 text-gray-500 hover:text-gray-800'
             } transition-colors`}
-            aria-label="닫기"
+            aria-label='닫기'
           >
             <FaTimes size={18} />
           </button>
         </div>
-        
+
         {/* Content */}
-        <div className="p-5 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 130px)' }}>
-          <div className="space-y-4">
+        <div
+          className='p-5 overflow-y-auto'
+          style={{ maxHeight: 'calc(90vh - 130px)' }}
+        >
+          <div className='space-y-4'>
             <div>
               <input
-                type="text"
+                type='text'
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
-                placeholder="제목"
+                placeholder='제목'
                 className={`w-full p-2.5 rounded-lg ${
                   darkMode
                     ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500'
@@ -149,12 +159,12 @@ const NoteModal: React.FC<NoteModalProps> = ({
                 } border outline-none transition-colors`}
               />
             </div>
-            
+
             <div>
               <textarea
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
-                placeholder="내용을 입력하세요..."
+                placeholder='내용을 입력하세요...'
                 className={`w-full p-2.5 rounded-lg resize-none h-28 ${
                   darkMode
                     ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500'
@@ -162,17 +172,27 @@ const NoteModal: React.FC<NoteModalProps> = ({
                 } border outline-none transition-colors`}
               />
             </div>
-            
+
             <div>
-              <div className="flex mb-2 items-center">
-                <FaCalendarAlt className={`mr-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>날짜 선택</span>
+              <div className='flex mb-2 items-center'>
+                <FaCalendarAlt
+                  className={`mr-2 ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}
+                />
+                <span
+                  className={`text-sm ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                >
+                  날짜 선택
+                </span>
               </div>
               <DatePicker
                 selected={selectedDate}
                 onChange={(date: Date | null) => setSelectedDate(date)}
-                dateFormat="yyyy.MM.dd"
-                placeholderText="날짜를 선택하세요"
+                dateFormat='yyyy.MM.dd'
+                placeholderText='날짜를 선택하세요'
                 className={`w-full p-2.5 rounded-lg ${
                   darkMode
                     ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
@@ -182,17 +202,23 @@ const NoteModal: React.FC<NoteModalProps> = ({
                 onKeyDown={(e) => e.preventDefault()}
               />
             </div>
-            
+
             <div>
-              <div className="flex mb-2 items-center">
-                <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>할일 목록</span>
+              <div className='flex mb-2 items-center'>
+                <span
+                  className={`text-sm ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                >
+                  할일 목록
+                </span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className='flex items-center space-x-2'>
                 <input
-                  type="text"
+                  type='text'
                   value={todoContent}
                   onChange={(e) => setTodoContent(e.target.value)}
-                  placeholder="새로운 할일"
+                  placeholder='새로운 할일'
                   className={`flex-grow p-2.5 rounded-lg ${
                     darkMode
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500'
@@ -203,21 +229,23 @@ const NoteModal: React.FC<NoteModalProps> = ({
                 <button
                   onClick={addTodo}
                   className={`p-2.5 rounded-lg ${
-                    darkMode 
-                      ? 'bg-primary-600 hover:bg-primary-700' 
+                    darkMode
+                      ? 'bg-primary-600 hover:bg-primary-700'
                       : 'bg-primary-500 hover:bg-primary-600'
                   } text-white transition-colors`}
-                  aria-label="할일 추가"
+                  aria-label='할일 추가'
                 >
                   <FaPlus />
                 </button>
               </div>
             </div>
-            
-            <div className={`border rounded-lg p-1 max-h-40 overflow-y-auto ${
-              darkMode ? 'border-gray-700' : 'border-gray-200'
-            } ${currentTodos.length === 0 ? 'hidden' : ''}`}>
-              <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+
+            <div
+              className={`border rounded-lg p-1 max-h-40 overflow-y-auto ${
+                darkMode ? 'border-gray-700' : 'border-gray-200'
+              } ${currentTodos.length === 0 ? 'hidden' : ''}`}
+            >
+              <ul className='divide-y divide-gray-200 dark:divide-gray-700'>
                 {currentTodos.map((todo, index) => (
                   <TodoItem
                     key={index}
@@ -231,9 +259,13 @@ const NoteModal: React.FC<NoteModalProps> = ({
             </div>
           </div>
         </div>
-        
+
         {/* Footer */}
-        <div className={`p-4 ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} flex justify-end space-x-2`}>
+        <div
+          className={`p-4 ${
+            darkMode ? 'bg-gray-700' : 'bg-gray-50'
+          } flex justify-end space-x-2`}
+        >
           <button
             onClick={onClose}
             className={`px-4 py-2 rounded-lg ${

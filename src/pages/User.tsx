@@ -162,109 +162,185 @@ const User: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-white'} flex justify-center items-center w-full py-10`}>
-      <div className={`flex flex-col w-full max-w-md text-base font-normal leading-normal ${darkMode ? 'text-gray-200' : 'text-gray-800'} p-8 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-md border ${darkMode ? 'border-gray-700' : 'border-gray-200'} animate-fade-in`}>
-        <div className={`flex flex-col text-sm items-center ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-8`}>
+    <div
+      className={`min-h-screen ${
+        darkMode ? 'bg-gray-900' : 'bg-white'
+      } flex justify-center items-center w-full py-10`}
+    >
+      <div
+        className={`flex flex-col w-full max-w-md text-base font-normal leading-normal ${
+          darkMode ? 'text-gray-200' : 'text-gray-800'
+        } p-8 ${
+          darkMode ? 'bg-gray-800' : 'bg-white'
+        } rounded-lg shadow-md border ${
+          darkMode ? 'border-gray-700' : 'border-gray-200'
+        } animate-fade-in`}
+      >
+        <div
+          className={`flex flex-col text-sm items-center ${
+            darkMode ? 'text-gray-300' : 'text-gray-600'
+          } mb-8`}
+        >
           <div className='h-24 w-24 bg-primary-100 rounded-full flex items-center justify-center mb-4'>
             <div className='text-5xl'>👤</div>
           </div>
-          <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-1`}>{userInfo.name || '닉네임 미설정'}</h2>
-          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>{userInfo.email}</p>
+          <h2
+            className={`text-xl font-bold ${
+              darkMode ? 'text-white' : 'text-gray-800'
+            } mb-1`}
+          >
+            {userInfo.name || '닉네임 미설정'}
+          </h2>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>
+            {userInfo.email}
+          </p>
           {isKakaoUser && (
             <span className='px-3 py-1 bg-primary-100 text-primary-800 text-xs font-medium rounded-full shadow-sm'>
-              카카오 계정 연동됨
+              카카오 계정
             </span>
           )}
         </div>
         <div className='space-y-5'>
-        <div>
-          <label htmlFor='name' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
-            닉네임
-          </label>
-          <input
-            className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
-            type='text'
-            id='name'
-            placeholder='닉네임'
-            maxLength={10}
-            value={userInfo.name || ''}
-            onChange={handleChange}
-            name='name'
-            required
-          />
-        </div>
+          <div>
+            <label
+              htmlFor='name'
+              className={`block text-sm font-medium ${
+                darkMode ? 'text-gray-300' : 'text-gray-700'
+              } mb-1`}
+            >
+              닉네임
+            </label>
+            <input
+              className={`w-full px-4 py-3 ${
+                darkMode
+                  ? 'text-white bg-gray-700 border-gray-600'
+                  : 'text-gray-700 bg-gray-50 border-gray-300'
+              } border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
+              type='text'
+              id='name'
+              placeholder='닉네임'
+              maxLength={10}
+              value={userInfo.name || ''}
+              onChange={handleChange}
+              name='name'
+              required
+            />
+          </div>
 
-        {!isKakaoUser && (
-          <>
-            <div>
-              <label htmlFor='password' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
-                현재 비밀번호
-              </label>
-              <input
-                className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
-                type='password'
-                id='password'
-                placeholder='비밀번호'
-                name='password'
-                maxLength={30}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className='mt-5'>
-              <label htmlFor='newPassword' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
-                새 비밀번호
-              </label>
-              <input
-                className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
-                type='password'
-                id='newPassword'
-                placeholder='새 비밀번호'
-                maxLength={30}
-                onChange={handleChange}
-                name='newPassword'
-              />
-            </div>
-            <div className='mt-5'>
-              <label htmlFor='againPassword' className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
-                새 비밀번호 확인
-              </label>
-              <input
-                className={`w-full px-4 py-3 ${darkMode ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-700 bg-gray-50 border-gray-300'} border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
-                type='password'
-                id='againPassword'
-                placeholder='새 비밀번호 확인'
-                maxLength={30}
-                onChange={handleChange}
-                name='againPassword'
-              />
-            </div>
-          </>
-        )}
+          {!isKakaoUser && (
+            <>
+              <div>
+                <label
+                  htmlFor='password'
+                  className={`block text-sm font-medium ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  } mb-1`}
+                >
+                  현재 비밀번호
+                </label>
+                <input
+                  className={`w-full px-4 py-3 ${
+                    darkMode
+                      ? 'text-white bg-gray-700 border-gray-600'
+                      : 'text-gray-700 bg-gray-50 border-gray-300'
+                  } border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
+                  type='password'
+                  id='password'
+                  placeholder='비밀번호'
+                  name='password'
+                  maxLength={30}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className='mt-5'>
+                <label
+                  htmlFor='newPassword'
+                  className={`block text-sm font-medium ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  } mb-1`}
+                >
+                  새 비밀번호
+                </label>
+                <input
+                  className={`w-full px-4 py-3 ${
+                    darkMode
+                      ? 'text-white bg-gray-700 border-gray-600'
+                      : 'text-gray-700 bg-gray-50 border-gray-300'
+                  } border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
+                  type='password'
+                  id='newPassword'
+                  placeholder='새 비밀번호'
+                  maxLength={30}
+                  onChange={handleChange}
+                  name='newPassword'
+                />
+              </div>
+              <div className='mt-5'>
+                <label
+                  htmlFor='againPassword'
+                  className={`block text-sm font-medium ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  } mb-1`}
+                >
+                  새 비밀번호 확인
+                </label>
+                <input
+                  className={`w-full px-4 py-3 ${
+                    darkMode
+                      ? 'text-white bg-gray-700 border-gray-600'
+                      : 'text-gray-700 bg-gray-50 border-gray-300'
+                  } border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
+                  type='password'
+                  id='againPassword'
+                  placeholder='새 비밀번호 확인'
+                  maxLength={30}
+                  onChange={handleChange}
+                  name='againPassword'
+                />
+              </div>
+            </>
+          )}
 
-        <div className='flex flex-col space-y-3 mt-8'>
-          <button
-            className={`w-full px-6 py-3 font-medium text-white ${darkMode ? 'bg-primary-600 hover:bg-primary-700' : 'bg-primary-500 hover:bg-primary-600'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 transition-all duration-200 transform hover:translate-y-[-2px] hover:shadow-lg`}
-            onClick={handleUpdate}
+          <div className='flex flex-col space-y-3 mt-8'>
+            <button
+              className={`w-full px-6 py-3 font-medium text-white ${
+                darkMode
+                  ? 'bg-primary-600 hover:bg-primary-700'
+                  : 'bg-primary-500 hover:bg-primary-600'
+              } rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 transition-all duration-200 transform hover:translate-y-[-2px] hover:shadow-lg`}
+              onClick={handleUpdate}
+            >
+              {isKakaoUser ? '닉네임 변경하기' : '정보 변경하기'}
+            </button>
+            <button
+              className={`w-full px-6 py-3 font-medium ${
+                darkMode
+                  ? 'text-gray-300 bg-gray-700 hover:bg-gray-600'
+                  : 'text-gray-700 bg-gray-200 hover:bg-gray-300'
+              } rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all duration-200`}
+              onClick={() => navigate('/')}
+            >
+              홈으로 돌아가기
+            </button>
+          </div>
+
+          <div
+            className={`border-t ${
+              darkMode ? 'border-gray-700' : 'border-gray-200'
+            } mt-6 pt-6 text-center`}
           >
-            {isKakaoUser ? '닉네임 변경하기' : '정보 변경하기'}
-          </button>
-          <button
-            className={`w-full px-6 py-3 font-medium ${darkMode ? 'text-gray-300 bg-gray-700 hover:bg-gray-600' : 'text-gray-700 bg-gray-200 hover:bg-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all duration-200`}
-            onClick={() => navigate('/')}
-          >
-            홈으로 돌아가기
-          </button>
-        </div>
-        
-        <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} mt-6 pt-6 text-center`}>
-          <button
-            onClick={handleDelete}
-            className={`text-sm ${darkMode ? 'text-gray-400 hover:text-red-400 hover:bg-red-900' : 'text-gray-500 hover:text-red-500 hover:bg-red-50'} transition-colors px-4 py-2 rounded-full`}
-          >
-            {isKakaoUser ? '카카오 연결 해제 및 탈퇴' : '회원탈퇴'}
-          </button>
-        </div>
+            <button
+              onClick={handleDelete}
+              className={`text-sm ${
+                darkMode
+                  ? 'text-gray-400 hover:text-red-400 hover:bg-red-900'
+                  : 'text-gray-500 hover:text-red-500 hover:bg-red-50'
+              } transition-colors px-4 py-2 rounded-full`}
+            >
+              {isKakaoUser ? '카카오 연결 해제 및 탈퇴' : '회원탈퇴'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

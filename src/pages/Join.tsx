@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '@/contexts/AlertContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import * as auth from '@/apis/auth';
 import JoinForm from '@/components/Join/JoinForm';
 import { FormErrors, JoinForm as JoinFormType } from '@/types';
@@ -11,6 +12,7 @@ import { FormErrors, JoinForm as JoinFormType } from '@/types';
 const Join: React.FC = () => {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
+  const { darkMode } = useTheme();
   const [errors, setErrors] = useState<FormErrors>({});
 
   const join = async (form: JoinFormType) => {
@@ -24,7 +26,7 @@ const Join: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
       <JoinForm join={join} errors={errors} />
     </div>
   );

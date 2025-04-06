@@ -118,7 +118,13 @@ export const getColor = (
   const colorIndex = Math.min(Math.ceil(ratio * 4), 4);
 
   // 모던한 그린 색상 팔레트
-  const colors = ['#ebedf0', '#c6e48b', '#7bc96f', '#49a75b', '#2e8840'];
+  const colors = [
+    darkMode ? '#161b22' : '#ebedf0',
+    '#c6e48b',
+    '#7bc96f',
+    '#49a75b',
+    '#2e8840',
+  ];
 
   return colors[colorIndex];
 };

@@ -10,13 +10,13 @@ import { useTheme } from '@/contexts/ThemeContext';
  */
 const Home: React.FC = () => {
   const { darkMode } = useTheme();
-  
-  // 커스텀 훅을 통해 메모 데이터 관리
+
   const {
     notes,
     contributions,
     years,
     currentYear,
+    currentMonth,
     currentDate,
     taskStats,
     onDateChange,
@@ -26,17 +26,22 @@ const Home: React.FC = () => {
   } = useMemoData();
 
   return (
-    <div className={`min-h-screen px-4 py-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'}`}>
-      <div className="container mx-auto">
+    <div
+      className={`min-h-screen px-4 py-6 ${
+        darkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'
+      }`}
+    >
+      <div className='container mx-auto'>
         <Calendar
           contributions={contributions}
           years={years}
           currentYear={currentYear}
+          currentMonth={currentMonth} // 추가
           taskStats={taskStats}
           onDateChange={onDateChange}
         />
-        
-        <div className="max-w-5xl mx-auto mt-8">
+
+        <div className='max-w-5xl mx-auto mt-8'>
           <Notes
             notes={notes}
             currentYear={currentYear}
