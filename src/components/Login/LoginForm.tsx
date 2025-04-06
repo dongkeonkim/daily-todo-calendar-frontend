@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { LoginContext } from '@/contexts/LoginContextProvider';
 import { useTheme } from '@/contexts/ThemeContext';
+import { Link } from 'react-router-dom';
 import KakaoLoginButton from './KakaoLoginbutton';
 
 const LoginForm: React.FC = () => {
@@ -91,7 +92,7 @@ const LoginForm: React.FC = () => {
         
         <div className='mt-8 text-center'>
           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            계정이 없으신가요? <a href='/join' className={`font-medium ${darkMode ? 'text-primary-400 hover:text-primary-300' : 'text-primary-600 hover:text-primary-500'}`}>회원가입</a>
+            계정이 없으신가요? <Link to='/join' className={`font-medium ${darkMode ? 'text-primary-400 hover:text-primary-300' : 'text-primary-600 hover:text-primary-500'}`}>회원가입</Link>
           </p>
         </div>
         </form>

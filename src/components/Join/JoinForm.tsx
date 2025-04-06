@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormErrors, JoinForm as JoinFormType } from '@/types';
 import { useTheme } from '@/contexts/ThemeContext';
+import { Link } from 'react-router-dom';
 
 interface JoinFormProps {
   join: (form: JoinFormType) => Promise<void>;
@@ -116,7 +117,7 @@ const JoinForm: React.FC<JoinFormProps> = ({ join, errors }) => {
         
         <div className='mt-8 text-center'>
           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            이미 계정이 있으신가요? <a href='/login' className={`font-medium ${darkMode ? 'text-primary-400 hover:text-primary-300' : 'text-primary-600 hover:text-primary-500'}`}>로그인</a>
+            이미 계정이 있으신가요? <Link to='/login' className={`font-medium ${darkMode ? 'text-primary-400 hover:text-primary-300' : 'text-primary-600 hover:text-primary-500'}`}>로그인</Link>
           </p>
         </div>
         </form>
