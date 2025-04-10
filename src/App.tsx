@@ -12,6 +12,7 @@ import { AlertProvider } from './contexts/AlertContext';
 import { LoadingProvider } from './contexts/LoadingContext';
 import LoadingSpinner from './components/Loadings/LoadingSpinner';
 import KakaoCallback from './pages/KakaoCallback';
+import NotFound from './pages/NotFound';
 import { ThemeProvider } from './contexts/ThemeContext';
 
 /**
@@ -70,6 +71,9 @@ const AppContent: React.FC = () => {
               </PrivateRoute>
             }
           />
+          
+          {/* 404 Not Found - 모든 정의되지 않은 경로에 대한 처리 */}
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </div>
     </div>
