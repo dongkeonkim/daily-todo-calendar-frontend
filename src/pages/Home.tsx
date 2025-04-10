@@ -36,7 +36,8 @@ const Home: React.FC = () => {
           contributions={contributions}
           years={years}
           currentYear={currentYear}
-          currentMonth={currentMonth} // 추가
+          currentMonth={currentMonth}
+          currentDate={currentDate}
           taskStats={taskStats}
           onDateChange={onDateChange}
         />

@@ -110,8 +110,19 @@ const NoteModal: React.FC<NoteModalProps> = ({
 
   if (!isOpen) return null;
 
+  // 모달 외부 클릭 처리 함수
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    // 배경 클릭 시에만 모달 닫기
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50'>
+    <div 
+      className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50'
+      onClick={handleOutsideClick}
+    >
       <div
         className={`relative rounded-xl shadow-xl overflow-hidden w-full max-w-lg max-h-[90vh] 
         ${

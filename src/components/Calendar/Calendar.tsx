@@ -18,6 +18,7 @@ interface CalendarProps {
   years: string[];
   currentYear: number | null;
   currentMonth: number | null;
+  currentDate: string | null;
   taskStats: TaskStats;
   onDateChange: (
     year: string | number | null,
@@ -34,6 +35,7 @@ const Calendar: React.FC<CalendarProps> = ({
   years,
   currentYear,
   currentMonth,
+  currentDate,
   taskStats,
   onDateChange,
 }) => {
@@ -85,6 +87,7 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   // 날짜를 클릭했을 때 해당 날짜의 할일 목록으로 이동
+  // 같은 날짜를 다시 클릭하면 선택 해제
   const handleClick = async (
     year: number | null,
     month: number | null,
@@ -95,7 +98,13 @@ const Calendar: React.FC<CalendarProps> = ({
     const date = `${year}-${String(month).padStart(2, '0')}-${String(
       day
     ).padStart(2, '0')}`;
-    onDateChange(year, month, date);
+    
+    // 이미 선택된 날짜를 다시 클릭한 경우, 선택 해제
+    if (currentDate === date) {
+      onDateChange(year, month, null);
+    } else {
+      onDateChange(year, month, date);
+    }
   };
 
   // 월별 달력 데이터 생성
@@ -344,6 +353,13 @@ const Calendar: React.FC<CalendarProps> = ({
                         backgroundColor: item
                           ? getColor(item.successCnt, item.totalCnt, darkMode)
                           : 'transparent',
+                        // 선택된 날짜일 경우 그라데이션 적용
+                        background: item && currentDate === `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(item.day).padStart(2, '0')}`
+                          ? `linear-gradient(135deg, ${getColor(item.successCnt, item.totalCnt, darkMode)} 0%, ${darkMode ? '#4f46e5' : '#8b5cf6'} 100%)`
+                          : item ? getColor(item.successCnt, item.totalCnt, darkMode) : 'transparent',
+                        boxShadow: item && currentDate === `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(item.day).padStart(2, '0')}`
+                          ? '0 0 10px rgba(79, 70, 229, 0.6)'
+                          : 'none',
                       }}
                       data-tooltip-id={item ? `tooltip-${index}` : undefined}
                       data-tooltip-content={

@@ -53,7 +53,7 @@ const App: React.FC = () => {
  */
 const AppContent: React.FC = () => {
   return (
-    <div className='flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300'>
+    <div className='flex flex-col min-h-screen bg-white dark:bg-[#15192a] transition-colors duration-300'>
       <Header />
       <div className='flex-grow'>
         <Routes>
