@@ -4,7 +4,7 @@ export interface User {
   email: string;
   name: string;
   role: string;
-  kakaoId?: number | null;
+  isKakaoUser?: number | null;
   delYn: boolean;
   regDate: string;
   udtDate: string;
@@ -36,8 +36,8 @@ export interface Memo {
 // 캘린더 관련 타입
 export interface CalendarItem {
   scheduleDate: string;
-  successCnt: number;
-  totalCnt: number;
+  completedCount: number;
+  totalCount: number;
 }
 
 export interface TaskStats {

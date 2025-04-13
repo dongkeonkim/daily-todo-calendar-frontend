@@ -82,8 +82,8 @@ export const useMemoData = () => {
         // 완료율 계산
         const result = data.calendar.reduce(
           (acc, grass) => {
-            acc.successCnt += grass.successCnt;
-            acc.goalCnt += grass.totalCnt;
+            acc.successCnt += grass.completedCount;
+            acc.goalCnt += grass.totalCount;
             return acc;
           },
           { successCnt: 0, goalCnt: 0 }
@@ -178,7 +178,6 @@ export const useMemoData = () => {
       return data;
     } catch (error) {
       showAlert('메모 저장에 실패했습니다.');
-      throw error;
     } finally {
       finishLoading();
     }
@@ -207,7 +206,6 @@ export const useMemoData = () => {
       await fetchContributions(currentYear, currentMonth);
     } catch (error) {
       showAlert('메모 수정에 실패했습니다.');
-      throw error;
     } finally {
       finishLoading();
     }
@@ -223,7 +221,6 @@ export const useMemoData = () => {
       await fetchContributions(currentYear, currentMonth);
     } catch (error) {
       showAlert('메모 삭제에 실패했습니다.');
-      throw error;
     } finally {
       finishLoading();
     }

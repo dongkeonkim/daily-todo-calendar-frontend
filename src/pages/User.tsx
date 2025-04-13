@@ -37,7 +37,7 @@ const User: React.FC = () => {
       const data = response.data.result;
 
       // 카카오 사용자 여부 확인 (kakaoId 필드가 있는지 확인)
-      setIsKakaoUser(!!data.kakaoId);
+      setIsKakaoUser(!!data.isKakaoUser);
       setUserInfo(data);
     } catch (error) {
       console.error('Failed to fetch user info:', error);

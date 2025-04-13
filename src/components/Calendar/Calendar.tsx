@@ -98,7 +98,7 @@ const Calendar: React.FC<CalendarProps> = ({
     const date = `${year}-${String(month).padStart(2, '0')}-${String(
       day
     ).padStart(2, '0')}`;
-    
+
     // 이미 선택된 날짜를 다시 클릭한 경우, 선택 해제
     if (currentDate === date) {
       onDateChange(year, month, null);
@@ -140,8 +140,8 @@ const Calendar: React.FC<CalendarProps> = ({
 
       days.push({
         day,
-        successCnt: contribution ? contribution.successCnt : 0,
-        totalCnt: contribution ? contribution.totalCnt : 0,
+        successCnt: contribution ? contribution.completedCount : 0,
+        totalCnt: contribution ? contribution.totalCount : 0,
       });
     }
 
@@ -354,12 +354,30 @@ const Calendar: React.FC<CalendarProps> = ({
                           ? getColor(item.successCnt, item.totalCnt, darkMode)
                           : 'transparent',
                         // 선택된 날짜일 경우 그라데이션 적용
-                        background: item && currentDate === `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(item.day).padStart(2, '0')}`
-                          ? `linear-gradient(135deg, ${getColor(item.successCnt, item.totalCnt, darkMode)} 0%, ${darkMode ? '#4f46e5' : '#8b5cf6'} 100%)`
-                          : item ? getColor(item.successCnt, item.totalCnt, darkMode) : 'transparent',
-                        boxShadow: item && currentDate === `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(item.day).padStart(2, '0')}`
-                          ? '0 0 10px rgba(79, 70, 229, 0.6)'
-                          : 'none',
+                        background:
+                          item &&
+                          currentDate ===
+                            `${currentYear}-${String(currentMonth).padStart(
+                              2,
+                              '0'
+                            )}-${String(item.day).padStart(2, '0')}`
+                            ? `linear-gradient(135deg, ${getColor(
+                                item.successCnt,
+                                item.totalCnt,
+                                darkMode
+                              )} 0%, ${darkMode ? '#4f46e5' : '#8b5cf6'} 100%)`
+                            : item
+                            ? getColor(item.successCnt, item.totalCnt, darkMode)
+                            : 'transparent',
+                        boxShadow:
+                          item &&
+                          currentDate ===
+                            `${currentYear}-${String(currentMonth).padStart(
+                              2,
+                              '0'
+                            )}-${String(item.day).padStart(2, '0')}`
+                            ? '0 0 10px rgba(79, 70, 229, 0.6)'
+                            : 'none',
                       }}
                       data-tooltip-id={item ? `tooltip-${index}` : undefined}
                       data-tooltip-content={

@@ -33,5 +33,4 @@ export const update = (data: Partial<User>) =>
 export const remove = (data: { email: string; password: string }) =>
   api.put<ApiResponse<void>>('/member/delete', data);
 
-export const unlinkKakao = () =>
-  api.post<ApiResponse<void>>('/auth/kakao/unlink');
+export const unlinkKakao = () => api.post<ApiResponse<void>>('/member/unlink');
